@@ -1,47 +1,18 @@
-// const express = require("express");
-// const serveStatic = require("serve-static");
-// const serveIndex = require("serve-index");
-// const bodyParser = require("body-parser");
+const express = require("express");
+const cors = require("cors");
+const routes = require("./routes");
 
-// const app = express();
-// const port = 8080;
-// const router = require("./routes/route");
+const app = express();
 
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use("/rest/", router);
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// app
-// 	.use(serveStatic(__dirname + "/static"))
-// 	.use(serveIndex(__dirname + "/static"));
+// Routes
+app.use("/", routes);
 
-// app.listen(port);
-// console.log("Server listening at http://localhost:8080");
-
-const path = require("path");
-const ManagerDAO = require("./dao/managerDAO");
-const Manager = require("./model/manager");
-
-const managerDAO = new ManagerDAO();
-
-// Kreiranje instanci Manager
-const managers = [
-	new Manager(
-		"john_doe",
-		"password123",
-		"John",
-		"Doe",
-		"male",
-		"1980-01-01",
-		"Factory_1"
-	),
-	new Manager(
-		"jane_doe",
-		"password456",
-		"Jane",
-		"Doe",
-		"female",
-		"1985-05-15",
-		"Factory_2"
-	),
-];
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
