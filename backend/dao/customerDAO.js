@@ -1,6 +1,6 @@
 const path = require("path");
 const Serializer = require("../serializer/serializer");
-const Customer = require("../models/customer");
+const Customer = require("../model/customer");
 
 class CustomerDAO {
 	constructor() {

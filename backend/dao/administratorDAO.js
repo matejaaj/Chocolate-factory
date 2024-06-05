@@ -1,7 +1,7 @@
 // dao/administrator-dao.js
 const path = require("path");
 const Serializer = require("../serializer/serializer");
-const Administrator = require("../models/administrator");
+const Administrator = require("../model/administrator");
 
 class AdministratorDAO {
 	constructor() {
