@@ -27,6 +27,7 @@ class Location {
 			this.city,
 			this.postalCode,
 		] = values;
+		this.id = parseInt(this.id);
 	}
 }
 

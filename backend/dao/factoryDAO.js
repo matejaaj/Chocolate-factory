@@ -4,7 +4,7 @@ const Factory = require("../model/factory");
 
 class FactoryDAO {
 	constructor() {
-		this.filePath = path.join(__dirname, "../resources/data/factory.csv");
+		this.filePath = path.join(__dirname, "../resources/data/factories.csv");
 		this.serializer = new Serializer();
 		this.factories = this.serializer.fromCSV(this.filePath, Factory);
 	}

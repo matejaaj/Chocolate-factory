@@ -31,6 +31,7 @@ class Factory {
 			this.logo,
 			this.rating,
 		] = values;
+		this.id = parseInt(this.id);
 	}
 }
 

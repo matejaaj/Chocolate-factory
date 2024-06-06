@@ -8,14 +8,16 @@ const employeeRoutes = require("./employeeRoutes");
 const factoryRoutes = require("./factoryRoutes");
 const locationRoutes = require("./locationRoutes");
 const managerRoutes = require("./managerRoutes");
+const authRoutes = require("./authRoutes"); // Import authRoutes
 
-router.use("/api/administrators", administratorRoutes);
-router.use("/api/chocolates", chocolateRoutes);
-router.use("/api/customers", customerRoutes);
-router.use("/api/customerTypes", customerTypeRoutes);
-router.use("/api/employees", employeeRoutes);
-router.use("/api/factories", factoryRoutes);
-router.use("/api/locations", locationRoutes);
-router.use("/api/managers", managerRoutes);
+router.use("/rest/administrators", administratorRoutes);
+router.use("/rest/chocolates", chocolateRoutes);
+router.use("/rest/customers", customerRoutes);
+router.use("/rest/customerTypes", customerTypeRoutes);
+router.use("/rest/employees", employeeRoutes);
+router.use("/rest/factories", factoryRoutes);
+router.use("/rest/locations", locationRoutes);
+router.use("/rest/managers", managerRoutes);
+router.use("/auth", authRoutes); // Add the auth route
 
 module.exports = router;

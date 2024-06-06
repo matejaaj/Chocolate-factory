@@ -1,4 +1,3 @@
-// dao/administrator-dao.js
 const path = require("path");
 const Serializer = require("../serializer/serializer");
 const Administrator = require("../model/administrator");
@@ -18,6 +17,7 @@ class AdministratorDAO {
 	}
 
 	save(administrator) {
+		administrator.id;
 		administrator.id = this.nextId();
 		this.administrators = this.serializer.fromCSV(this.filePath, Administrator);
 		this.administrators.push(administrator);

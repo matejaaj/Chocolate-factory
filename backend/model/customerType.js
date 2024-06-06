@@ -12,6 +12,7 @@ class CustomerType {
 
 	fromCSV(values) {
 		[this.id, this.name, this.discount, this.pointsRequired] = values;
+		this.id = parseInt(this.id);
 	}
 }
 

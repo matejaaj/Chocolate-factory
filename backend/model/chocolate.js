@@ -54,6 +54,7 @@ class Chocolate {
 			this.status,
 			this.quantity,
 		] = values;
+		this.id = parseInt(this.id);
 	}
 }
 

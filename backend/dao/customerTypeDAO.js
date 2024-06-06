@@ -4,7 +4,7 @@ const CustomerType = require("../model/customerType");
 
 class CustomerTypeDAO {
 	constructor() {
-		this.filePath = path.join(__dirname, "../resources/data/customerType.csv");
+		this.filePath = path.join(__dirname, "../resources/data/customerTypes.csv");
 		this.serializer = new Serializer();
 		this.customerTypes = this.serializer.fromCSV(this.filePath, CustomerType);
 	}

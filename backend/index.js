@@ -1,18 +1,31 @@
 const express = require("express");
-const cors = require("cors");
-const routes = require("./routes");
+const serveStatic = require("serve-static");
+const serveIndex = require("serve-index");
+const bodyParser = require("body-parser");
 
 const app = express();
+const port = 8080;
+const router = require("./routes/index");
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/", router);
 
-// Routes
-app.use("/", routes);
+app
+	.use(serveStatic(__dirname + "/static"))
+	.use(serveIndex(__dirname + "/static"));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+app.listen(port);
+console.log("Server listening at http://localhost:8080");
+
+const AuthService = require("./services/authService");
+const authService = new AuthService();
+const testUsername = "johndoe";
+const testPassword = "password123";
+const loginResult = authService.login(testUsername, testPassword);
+
+if (loginResult) {
+	console.log("Login test successful:", loginResult);
+} else {
+	console.log("Login test failed: Invalid credentials");
+}

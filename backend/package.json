@@ -12,6 +12,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "express-session": "^1.18.0",
     "serve-index": "^1.9.1",
     "serve-static": "^1.15.0"
   }

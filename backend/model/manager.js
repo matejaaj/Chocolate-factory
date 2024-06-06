@@ -1,51 +1,19 @@
-const User = require("./user");
-
-class Manager extends User {
-	constructor(
-		username,
-		password,
-		firstName,
-		lastName,
-		gender,
-		birthDate,
-		chocolateFactoryId
-	) {
-		super(
-			username,
-			password,
-			firstName,
-			lastName,
-			gender,
-			birthDate,
-			"MANAGER"
-		);
-		this.factoryId = chocolateFactoryId;
+class Manager {
+	constructor(userId, factoryId, id = null) {
+		this.userId = userId; // Reference to the user ID
+		this.factoryId = factoryId;
+		this.id = id; // Add id field
 	}
 
 	toCSV() {
-		return [
-			this.id,
-			this.username,
-			this.password,
-			this.firstName,
-			this.lastName,
-			this.gender,
-			this.birthDate,
-			this.factoryId,
-		];
+		return [this.id, this.userId, this.factoryId];
 	}
 
 	fromCSV(values) {
-		[
-			this.id,
-			this.username,
-			this.password,
-			this.firstName,
-			this.lastName,
-			this.gender,
-			this.birthDate,
-			this.factoryId,
-		] = values;
+		[this.id, this.userId, this.factoryId] = values;
+		this.id = parseInt(this.id);
+		this.userId = parseInt(this.userId);
+		this.factoryId = parseInt(this.factoryId);
 	}
 }
 

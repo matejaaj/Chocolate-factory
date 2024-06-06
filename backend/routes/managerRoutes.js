@@ -4,10 +4,10 @@ const router = express.Router();
 
 const managerController = new ManagerController();
 
-router.get("/managers", (req, res) => managerController.getAllManagers(req, res));
-router.get("/managers/:id", (req, res) => managerController.getManagerById(req, res));
-router.post("/managers", (req, res) => managerController.createManager(req, res));
-router.put("/managers/:id", (req, res) => managerController.updateManager(req, res));
-router.delete("/managers/:id", (req, res) => managerController.deleteManager(req, res));
+router.get("/", (req, res) => managerController.getAllManagers(req, res));
+router.get(":id", (req, res) => managerController.getManagerById(req, res));
+router.post("/", (req, res) => managerController.createManager(req, res));
+router.put(":id", (req, res) => managerController.updateManager(req, res));
+router.delete("/:id", (req, res) => managerController.deleteManager(req, res));
 
 module.exports = router;

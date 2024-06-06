@@ -6,7 +6,8 @@ class User {
 		lastName,
 		gender,
 		birthDate,
-		role
+		role = null,
+		subtypeId = null
 	) {
 		this.id = null;
 		this.username = username;
@@ -16,6 +17,37 @@ class User {
 		this.gender = gender;
 		this.birthDate = birthDate;
 		this.role = role;
+		this.subtypeId = subtypeId;
+	}
+
+	toCSV() {
+		return [
+			this.id,
+			this.username,
+			this.password,
+			this.firstName,
+			this.lastName,
+			this.gender,
+			this.birthDate,
+			this.role,
+			this.subtypeId,
+		];
+	}
+
+	fromCSV(values) {
+		[
+			this.id,
+			this.username,
+			this.password,
+			this.firstName,
+			this.lastName,
+			this.gender,
+			this.birthDate,
+			this.role,
+			this.subtypeId,
+		] = values;
+		this.id = parseInt(this.id);
+		this.subtypeId = parseInt(this.subtypeId);
 	}
 }
 

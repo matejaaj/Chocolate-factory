@@ -4,7 +4,7 @@ const Chocolate = require("../model/chocolate");
 
 class ChocolateDAO {
 	constructor() {
-		this.filePath = path.join(__dirname, "../resources/data/chocolate.csv");
+		this.filePath = path.join(__dirname, "../resources/data/chocolates.csv");
 		this.serializer = new Serializer();
 		this.chocolates = this.serializer.fromCSV(this.filePath, Chocolate);
 	}
