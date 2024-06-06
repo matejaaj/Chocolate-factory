@@ -12,7 +12,7 @@ router.get("/factories", (req, res) =>
 router.post("/factories", (req, res) =>
 	factoryController.createFactory(req, res)
 );
-router.get("/factories/:id", authenticateToken, (req, res) => {
+router.get("/factories/:id", (req, res) => {
 	factoryController.getFactoryById(req, res);
 });
 

@@ -5,14 +5,8 @@
 		<p><strong>Status:</strong> {{ factory.status }}</p>
 		<p><strong>Location:</strong> {{ getLocation(factory.locationId) }}</p>
 		<p><strong>Rating:</strong> {{ factory.rating }}</p>
-		<img :src="getFactoryLogo(factory.logo)" alt="Factory Logo" /> <br />
-		<div v-if="isManager">
-			<button @click="addChocolate">Add New Chocolate</button>
-		</div>
+		<img :src="getFactoryLogo(factory.logo)" alt="Factory Logo" />
 		<chocolate-list :factoryId="factory.id" />
-	</div>
-	<div v-else-if="errorMessage">
-		<p class="error">{{ errorMessage }}</p>
 	</div>
 	<div v-else>
 		<p>Loading factory details...</p>
@@ -22,7 +16,6 @@
 <script>
 import axios from "axios";
 import ChocolateList from "@/components/ChocolateList.vue";
-import auth from "../services/auth"; // Import the auth module
 
 export default {
 	name: "FactoryDetails",
@@ -33,14 +26,7 @@ export default {
 		return {
 			factory: null,
 			locations: [],
-			errorMessage: null,
 		};
-	},
-	computed: {
-		isManager() {
-			console.log("User:", auth.state.user); // Debug log
-			return auth.state.user && auth.state.user.role === "MANAGER";
-		},
 	},
 	created() {
 		this.fetchFactoryDetails();
@@ -57,11 +43,7 @@ export default {
 				);
 				this.factory = response.data;
 			} catch (error) {
-				if (error.response && error.response.status === 403) {
-					this.errorMessage = "You do not have access to this factory.";
-				} else {
-					this.errorMessage = "Error fetching factory details.";
-				}
+				console.error("Error fetching factory details:", error);
 			}
 		},
 		async fetchLocations() {
@@ -88,25 +70,13 @@ export default {
 				return "";
 			}
 		},
-		addChocolate() {
-			this.$router.push(`/add-chocolate/${this.factory.id}`);
-		},
 	},
 };
 </script>
 
-<style scoped>
+<style>
 img {
 	max-width: 200px;
 	height: auto;
-}
-button {
-	margin: 20px;
-	padding: 10px 20px;
-	font-size: 16px;
-	cursor: pointer;
-}
-.error {
-	color: red;
 }
 </style>
