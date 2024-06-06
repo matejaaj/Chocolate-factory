@@ -27,7 +27,10 @@
           <td><img :src="getChocolateImage(chocolate.image)" alt="Chocolate Image" /></td>
           <td>{{ chocolate.status }}</td>
           <td>{{ chocolate.quantity }}</td>
-          <td><button @click="deleteChocolate(chocolate.id)">Delete</button></td>
+          <td>
+            <button @click="editChocolate(chocolate.id)">Edit</button>
+            <button @click="deleteChocolate(chocolate.id)">Delete</button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -72,6 +75,9 @@ export default {
       } catch (error) {
         console.error('Error deleting chocolate:', error);
       }
+    },
+    editChocolate(chocolateId) {
+      this.$router.push(`/edit-chocolate/${chocolateId}`);
     },
     getChocolateImage(imagePath) {
       try {

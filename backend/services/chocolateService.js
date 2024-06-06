@@ -33,6 +33,7 @@ class ChocolateService {
       existingChocolate.manufacturer = data.manufacturer || existingChocolate.manufacturer;
       existingChocolate.price = data.price || existingChocolate.price;
       existingChocolate.expiryDate = data.expiryDate || existingChocolate.expiryDate;
+      existingChocolate.quantity = data.quantity || existingChocolate.quantity;
       return this.chocolateDAO.update(existingChocolate);
     }
     return null;

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <h1>App.vue je otvoren</h1>
-    <button @click="goToFactories">Fabrike</button>
+    <h1>CHOCOLATE FACTORY APPLICATION</h1>
+    <button @click="goToFactories">Factories</button>
     <router-view></router-view>
   </div>
 </template>
