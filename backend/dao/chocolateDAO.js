@@ -31,7 +31,7 @@ class ChocolateDAO {
 
 	delete(chocolate) {
 		this.chocolates = this.serializer.fromCSV(this.filePath, Chocolate);
-		const index = this.chocolates.findIndex((c) => c.id === chocolate.id);
+		const index = this.chocolates.findIndex((c) => c.id == chocolate.id);
 		if (index !== -1) {
 			this.chocolates.splice(index, 1);
 			this.serializer.toCSV(this.filePath, this.chocolates);
@@ -50,7 +50,7 @@ class ChocolateDAO {
 
 	getById(chocolateId) {
 		this.chocolates = this.serializer.fromCSV(this.filePath, Chocolate);
-		return this.chocolates.find((chocolate) => chocolate.id === chocolateId);
+		return this.chocolates.find((chocolate) => chocolate.id == chocolateId);
 	}
 }
 
