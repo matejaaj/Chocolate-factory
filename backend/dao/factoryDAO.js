@@ -31,7 +31,7 @@ class FactoryDAO {
 
 	delete(factory) {
 		this.factories = this.serializer.fromCSV(this.filePath, Factory);
-		const index = this.factories.findIndex((f) => f.id === factory.id);
+		const index = this.factories.findIndex((f) => f.id == factory.id);
 		if (index !== -1) {
 			this.factories.splice(index, 1);
 			this.serializer.toCSV(this.filePath, this.factories);
@@ -40,7 +40,7 @@ class FactoryDAO {
 
 	update(factory) {
 		this.factories = this.serializer.fromCSV(this.filePath, Factory);
-		const index = this.factories.findIndex((f) => f.id === factory.id);
+		const index = this.factories.findIndex((f) => f.id == factory.id);
 		if (index !== -1) {
 			this.factories[index] = factory;
 			this.serializer.toCSV(this.filePath, this.factories);
@@ -50,7 +50,7 @@ class FactoryDAO {
 
 	getById(factoryId) {
 		this.factories = this.serializer.fromCSV(this.filePath, Factory);
-		return this.factories.find((factory) => factory.id === factoryId);
+		return this.factories.find((factory) => factory.id == factoryId);
 	}
 }
 

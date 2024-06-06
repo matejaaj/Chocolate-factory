@@ -46,6 +46,12 @@ class ChocolateService {
     }
     return false;
   }
+
+  getChocolatesByFactory(factoryId) {
+    const chocolates = this.chocolateDAO.getAll();
+    return chocolates.filter(chocolate => chocolate.factoryId == factoryId);
+  }
+
 }
 
 module.exports = ChocolateService;

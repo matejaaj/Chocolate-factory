@@ -8,14 +8,16 @@
           <th>Location</th>
           <th>Logo</th>
           <th>Rating</th>
+          <th>Details</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="factory in sortedFactories" :key="factory.id">
           <td>{{ factory.name }}</td>
           <td>{{ getLocation(factory.locationId) }}</td>
-          <img :src="getFactoryLogo(factory.logo)" alt="Factory Logo" />
+          <td><img :src="getFactoryLogo(factory.logo)" alt="Factory Logo" /></td>
           <td>{{ factory.rating }}</td>
+          <td><button @click="goToFactoryDetails(factory.id)">Details</button></td>
         </tr>
       </tbody>
     </table>
@@ -67,13 +69,15 @@ export default {
       return location ? `${location.street}, ${location.city}, ${location.postalCode}` : "Unknown location";
     },
     getFactoryLogo(logoPath) {
-      // Pretpostavlja se da su sve slike u src/assets/images
       try {
         return require(`@/assets/images/${logoPath.split('/').pop()}`);
       } catch (e) {
         console.error(`Image not found: ${logoPath}`);
-        return ''; // Vratite praznu putanju ako slika nije pronađena
+        return '';
       }
+    },
+    goToFactoryDetails(factoryId) {
+      this.$router.push(`/factories/${factoryId}`);
     }
   }
 }
@@ -101,5 +105,9 @@ th {
 img {
   max-width: 100px;
   height: auto;
+}
+button {
+  padding: 5px 10px;
+  cursor: pointer;
 }
 </style>

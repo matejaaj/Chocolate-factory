@@ -19,6 +19,12 @@ class ChocolateController {
     }
   }
 
+  getChocolatesByFactory(req, res) {
+    const factoryId = parseInt(req.query.factoryId);
+    const chocolates = this.chocolateService.getChocolatesByFactory(factoryId);
+    res.json(chocolates);
+  }
+
   createChocolate(req, res) {
     const newChocolate = this.chocolateService.createChocolate(req.body);
     res.status(201).json(newChocolate);
