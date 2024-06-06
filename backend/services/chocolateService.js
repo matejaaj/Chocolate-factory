@@ -17,13 +17,19 @@ class ChocolateService {
   createChocolate(data) {
     const newChocolate = new Chocolate(
       data.name,
-      data.type,
-      data.manufacturer,
       data.price,
-      data.expiryDate
+      data.type,
+      data.factoryId,
+      data.category,
+      data.weight,
+      data.description,
+      data.image,
+      data.status,
+      0
     );
     return this.chocolateDAO.save(newChocolate);
-  }
+}
+
 
   updateChocolate(id, data) {
     const existingChocolate = this.chocolateDAO.getById(id);

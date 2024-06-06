@@ -5,7 +5,8 @@
       <p><strong>Status:</strong> {{ factory.status }}</p>
       <p><strong>Location:</strong> {{ getLocation(factory.locationId) }}</p>
       <p><strong>Rating:</strong> {{ factory.rating }}</p>
-      <img :src="getFactoryLogo(factory.logo)" alt="Factory Logo" />
+      <img :src="getFactoryLogo(factory.logo)" alt="Factory Logo" /> <br>
+      <button @click="addChocolate">Add New Chocolate</button>
       <chocolate-list :factoryId="factory.id" />
     </div>
     <div v-else>
@@ -60,6 +61,9 @@
           console.error(`Image not found: ${logoPath}`);
           return ''; 
         }
+      },
+      addChocolate() {
+        this.$router.push(`/add-chocolate/${this.factory.id}`);
       }
     }
   }
@@ -69,6 +73,12 @@
   img {
     max-width: 200px;
     height: auto;
+  }
+  button {
+    margin: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
   }
   </style>
   

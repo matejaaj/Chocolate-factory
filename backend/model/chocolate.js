@@ -11,7 +11,7 @@ class Chocolate {
 		status,
 		quantity
 	) {
-		this.id = null; // ID će biti serijalizovan i deserijalizovan, ali ne postavljan u konstruktoru
+		this.id = null; 
 		this.name = name;
 		this.price = price;
 		this.type = type;
