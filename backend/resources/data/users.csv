@@ -1,1 +1,5 @@
-1|johndoe|password123|John|Doe|Male|1990-01-01|CUSTOMER|1
+1|mateja|mateja123|John|Doe|Male|1990-01-01|CUSTOMER|1
+2|admin|mateja123|John|Doe|Male|1990-01-01|ADMIN|2
+3|manager|manager|John|Doe|Male|1990-01-01|MANAGER|3
+4|customer|customer|John|Doe|Male|1990-01-01|CUSTOMER|4
+5|employee|employee|John|Doe|Male|1990-01-01|EMPLOYEE|5
