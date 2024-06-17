@@ -4,7 +4,10 @@ import Factories from "@/views/Factories.vue";
 import FactoryDetails from "@/views/FactoryDetails.vue";
 import EditChocolate from "@/views/EditChocolate.vue";
 import AddChocolate from "@/views/AddChocolate.vue";
-import UserLogin from "@/views/UserLogin.vue"; // Update the import
+import UserLogin from "@/views/UserLogin.vue";
+import AdminPage from "@/views/AdminPage.vue";
+import CreateFactory from "@/components/CreateFactory.vue";
+import ViewUsers from "@/components/ViewUsers.vue";
 import auth from "@/services/auth";
 
 const routes = [
@@ -27,6 +30,22 @@ const routes = [
 		meta: { requiresAuth: true, role: "MANAGER" },
 	},
 	{ path: "/login", component: UserLogin },
+	{
+		path: "/admin",
+		component: AdminPage,
+		props: true,
+		meta: { requiresAuth: true, role: "ADMIN" },
+		children: [
+			{
+				path: "create-factory",
+				component: CreateFactory,
+			},
+			{
+				path: "view-users",
+				component: ViewUsers,
+			},
+		],
+	},
 ];
 
 const router = createRouter({

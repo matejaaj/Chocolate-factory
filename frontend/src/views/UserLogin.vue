@@ -32,6 +32,16 @@ export default {
 		const successMessage = ref("");
 		const router = useRouter();
 
+		const redirectToRoleBasedPage = (role) => {
+			const roleRoutes = {
+				MANAGER: "/factories", // Example route for MANAGER role
+				ADMIN: "/admin", // Example route for ADMIN role
+				default: "/",
+			};
+			const route = roleRoutes[role] || roleRoutes.default;
+			router.push(route);
+		};
+
 		const handleLogin = async () => {
 			errorMessage.value = "";
 			successMessage.value = "";
@@ -49,9 +59,10 @@ export default {
 
 				auth.setAuthenticated(true, response.data); // Set the authentication status and user data
 				successMessage.value = "Login successful!";
+
 				setTimeout(() => {
-					router.push("/");
-				}, 1500);
+					redirectToRoleBasedPage(response.data.role); // Call the redirection method
+				}, 1000);
 			} catch (error) {
 				if (error.response && error.response.status === 401) {
 					errorMessage.value = "Invalid username or password";
