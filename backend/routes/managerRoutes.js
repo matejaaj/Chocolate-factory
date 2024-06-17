@@ -9,5 +9,8 @@ router.get(":id", (req, res) => managerController.getManagerById(req, res));
 router.post("/", (req, res) => managerController.createManager(req, res));
 router.put(":id", (req, res) => managerController.updateManager(req, res));
 router.delete("/:id", (req, res) => managerController.deleteManager(req, res));
+router.get("/available-managers", (req, res) =>
+	managerController.getAvailableManagers(req, res)
+);
 
 module.exports = router;

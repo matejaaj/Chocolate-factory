@@ -1,4 +1,5 @@
 const UserDAO = require("../dao/userDAO");
+const ManagerDAO = require("../dao/managerDAO");
 
 class UserService {
 	constructor() {
