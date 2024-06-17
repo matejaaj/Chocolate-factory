@@ -76,7 +76,7 @@ export default {
 		async fetchChocolates() {
 			try {
 				const response = await axios.get(
-					`http://localhost:3000/rest/chocolates/chocolates?factoryId=${this.factoryId}`,
+					`http://localhost:3000/rest/chocolates?factoryId=${this.factoryId}`,
 					{
 						withCredentials: true,
 					}
@@ -102,7 +102,7 @@ export default {
 		async deleteChocolate(chocolateId) {
 			try {
 				await axios.delete(
-					`http://localhost:3000/rest/chocolates/chocolates/${chocolateId}`,
+					`http://localhost:3000/rest/chocolates/${chocolateId}`,
 					{
 						withCredentials: true,
 					}

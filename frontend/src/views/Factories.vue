@@ -55,7 +55,7 @@ export default {
 		async fetchFactories() {
 			try {
 				const response = await axios.get(
-					"http://localhost:3000/rest/factories/factories",
+					"http://localhost:3000/rest/factories",
 					{ withCredentials: true }
 				);
 				this.factories = response.data;
@@ -66,7 +66,7 @@ export default {
 		async fetchLocations() {
 			try {
 				const response = await axios.get(
-					"http://localhost:3000/rest/locations/locations",
+					"http://localhost:3000/rest/locations",
 					{ withCredentials: true }
 				);
 				this.locations = response.data;

@@ -36,7 +36,7 @@ export default {
 		async fetchFactoryDetails() {
 			try {
 				const response = await axios.get(
-					`http://localhost:3000/rest/factories/factories/${this.$route.params.id}`,
+					`http://localhost:3000/rest/factories/${this.$route.params.id}`,
 					{
 						withCredentials: true,
 					}
@@ -49,7 +49,7 @@ export default {
 		async fetchLocations() {
 			try {
 				const response = await axios.get(
-					"http://localhost:3000/rest/locations/locations"
+					"http://localhost:3000/rest/locations"
 				);
 				this.locations = response.data;
 			} catch (error) {

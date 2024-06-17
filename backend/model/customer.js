@@ -1,9 +1,9 @@
 class Customer {
 	constructor(userId, points = 0, customerTypeId = null, id = null) {
-		this.userId = userId; // Reference to the user ID
+		this.userId = userId;
 		this.points = points;
 		this.customerTypeId = customerTypeId;
-		this.id = id; // Add id field
+		this.id = id;
 	}
 
 	toCSV() {

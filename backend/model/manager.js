@@ -1,7 +1,7 @@
 class Manager {
 	constructor(id, factoryId) {
 		this.factoryId = factoryId;
-		this.id = id; // Add id field
+		this.id = id;
 	}
 
 	toCSV() {
