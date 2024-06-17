@@ -1,12 +1,12 @@
-1|Milk Delight|2.5|Milk Chocolate|1|Standard|100g|Delicious milk chocolate.|../assets/images/chocolate_1.png|available|50
-2|Dark Temptation|3.0|Dark Chocolate|1|Premium|150g|Rich dark chocolate.|../assets/images/chocolate_2.png|not available|20
-3|White Wonder|2.8|White Chocolate|1|Standard|120g|Smooth white chocolate.|../assets/images/chocolate_3.png|available|30
-4|Almond Joy|3.2|Milk Chocolate|2|Nuts|130g|Milk chocolate with almonds.|../assets/images/chocolate_4.png|available|40
-5|Hazelnut Heaven|3.5|Dark Chocolate|2|Nuts|140g|Dark chocolate with hazelnuts.|../assets/images/chocolate_1.png|not available|15
-6|Caramel Bliss|3.1|Milk Chocolate|2|Caramel|110g|Milk chocolate with caramel filling.|../assets/images/chocolate_2.png|available|25
-7|EditedChocolate|8|Dark Chocolate|3|Mint|125g|Dark chocolate with mint flavor.|../assets/images/chocolate_3.png|available|69
-8|Strawberry Dream|5.8|White Chocolate|3|Fruit|115g|White chocolate with strawberry pieces.|../assets/images/chocolate_4.png|not available|10
-9|Orange Zest|3.0|Dark Chocolate|3|Fruit|135g|Dark chocolate with orange zest.|../assets/images/chocolate_1.png|available|35
-10|Coffee Crunch|3.4|Milk Chocolate|4|Coffee|145g|Milk chocolate with coffee crunch.|../assets/images/chocolate_2.png|available|50
-12|Berry Bliss|3.2|Dark Chocolate|4|Berry|150g|Dark chocolate with berry filling.|../assets/images/chocolate_3.png|available|45
-13|New Chocolate|12|White|3|Some|123|Good one|../assets/images/chocolate_4.png|not available|0
+1|Milk Delight|2.5|Milk Chocolate|1|Standard|100g|Delicious milk chocolate.|../assets/images/chocolate_1.png|available|50|false
+2|Dark Temptation|3.0|Dark Chocolate|1|Premium|150g|Rich dark chocolate.|../assets/images/chocolate_2.png|not available|20|false
+3|White Wonder|2.8|White Chocolate|1|Standard|120g|Smooth white chocolate.|../assets/images/chocolate_3.png|available|30|false
+4|Almond Joy|3.2|Milk Chocolate|2|Nuts|130g|Milk chocolate with almonds.|../assets/images/chocolate_4.png|available|40|false
+5|Hazelnut Heaven|3.5|Dark Chocolate|2|Nuts|140g|Dark chocolate with hazelnuts.|../assets/images/chocolate_1.png|not available|15|false
+6|Caramel Bliss|3.1|Milk Chocolate|2|Caramel|110g|Milk chocolate with caramel filling.|../assets/images/chocolate_2.png|available|25|false
+7|EditedChocolate|8|Dark Chocolate|3|Mint|125g|Dark chocolate with mint flavor.|../assets/images/chocolate_3.png|available|69|false
+8|Strawberry Dream|5.8|White Chocolate|3|Fruit|115g|White chocolate with strawberry pieces.|../assets/images/chocolate_4.png|not available|10|false
+9|Orange Zest|3.0|Dark Chocolate|3|Fruit|135g|Dark chocolate with orange zest.|../assets/images/chocolate_1.png|available|35|false
+10|Coffee Crunch|3.4|Milk Chocolate|4|Coffee|145g|Milk chocolate with coffee crunch.|../assets/images/chocolate_2.png|available|50|false
+12|Berry Bliss|3.2|Dark Chocolate|4|Berry|150g|Dark chocolate with berry filling.|../assets/images/chocolate_3.png|available|45|false
+13|New Chocolate|12|White|3|Some|123|Good one|../assets/images/chocolate_4.png|not available|0|false

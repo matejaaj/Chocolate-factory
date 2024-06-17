@@ -11,7 +11,7 @@ class Chocolate {
 		status,
 		quantity
 	) {
-		this.id = null; 
+		this.id = null;
 		this.name = name;
 		this.price = price;
 		this.type = type;
@@ -22,6 +22,7 @@ class Chocolate {
 		this.image = image;
 		this.status = status;
 		this.quantity = quantity;
+		this.isDeleted = false;
 	}
 
 	toCSV() {
@@ -37,6 +38,7 @@ class Chocolate {
 			this.image,
 			this.status,
 			this.quantity,
+			this.isDeleted ? "true" : "false",
 		];
 	}
 
@@ -53,8 +55,12 @@ class Chocolate {
 			this.image,
 			this.status,
 			this.quantity,
+			this.isDeleted,
 		] = values;
 		this.id = parseInt(this.id);
+		this.isDeleted = this.isDeleted
+			? this.isDeleted.toLowerCase() === "true"
+			: false;
 	}
 }
 

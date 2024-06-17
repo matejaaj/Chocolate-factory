@@ -7,6 +7,7 @@ class Factory {
 		this.locationId = locationId;
 		this.logo = logo;
 		this.rating = rating;
+		this.isDeleted = false;
 	}
 
 	toCSV() {
@@ -18,6 +19,7 @@ class Factory {
 			this.locationId,
 			this.logo,
 			this.rating,
+			this.isDeleted ? "true" : "false",
 		];
 	}
 
@@ -30,8 +32,12 @@ class Factory {
 			this.locationId,
 			this.logo,
 			this.rating,
+			this.isDeleted,
 		] = values;
 		this.id = parseInt(this.id);
+		this.isDeleted = this.isDeleted
+			? this.isDeleted.toLowerCase() === "true"
+			: false;
 	}
 }
 

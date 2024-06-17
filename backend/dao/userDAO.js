@@ -10,7 +10,8 @@ class UserDAO {
 	}
 
 	getAll() {
-		return this.serializer.fromCSV(this.filePath, User);
+		this.users = this.serializer.fromCSV(this.filePath, User);
+		return this.users.filter((user) => !user.isDeleted);
 	}
 
 	save(user) {
@@ -33,7 +34,7 @@ class UserDAO {
 		this.users = this.serializer.fromCSV(this.filePath, User);
 		const index = this.users.findIndex((u) => u.id === user.id);
 		if (index !== -1) {
-			this.users.splice(index, 1);
+			this.users[index].isDeleted = true;
 			this.serializer.toCSV(this.filePath, this.users);
 		}
 	}
@@ -50,12 +51,14 @@ class UserDAO {
 
 	getById(userId) {
 		this.users = this.serializer.fromCSV(this.filePath, User);
-		return this.users.find((user) => user.id === userId);
+		return this.users.find((user) => user.id === userId && !user.isDeleted);
 	}
 
 	findByUsername(username) {
 		this.users = this.serializer.fromCSV(this.filePath, User);
-		return this.users.find((user) => user.username === username);
+		return this.users.find(
+			(user) => user.username === username && !user.isDeleted
+		);
 	}
 }
 

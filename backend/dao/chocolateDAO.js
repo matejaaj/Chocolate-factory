@@ -10,7 +10,8 @@ class ChocolateDAO {
 	}
 
 	getAll() {
-		return this.serializer.fromCSV(this.filePath, Chocolate);
+		this.chocolates = this.serializer.fromCSV(this.filePath, Chocolate);
+		return this.chocolates.filter((chocolate) => !chocolate.isDeleted);
 	}
 
 	save(chocolate) {
@@ -33,7 +34,7 @@ class ChocolateDAO {
 		this.chocolates = this.serializer.fromCSV(this.filePath, Chocolate);
 		const index = this.chocolates.findIndex((c) => c.id == chocolate.id);
 		if (index !== -1) {
-			this.chocolates.splice(index, 1);
+			this.chocolates[index].isDeleted = true;
 			this.serializer.toCSV(this.filePath, this.chocolates);
 		}
 	}
@@ -50,7 +51,9 @@ class ChocolateDAO {
 
 	getById(chocolateId) {
 		this.chocolates = this.serializer.fromCSV(this.filePath, Chocolate);
-		return this.chocolates.find((chocolate) => chocolate.id == chocolateId);
+		return this.chocolates.find(
+			(chocolate) => chocolate.id == chocolateId && !chocolate.isDeleted
+		);
 	}
 }
 

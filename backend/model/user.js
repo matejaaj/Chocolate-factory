@@ -18,6 +18,8 @@ class User {
 		this.birthDate = birthDate;
 		this.role = role;
 		this.subtypeId = subtypeId;
+		this.isBlocked = false;
+		this.isDeleted = false;
 	}
 
 	toCSV() {
@@ -31,7 +33,9 @@ class User {
 			this.birthDate,
 			this.role,
 			this.subtypeId,
-		];
+			this.isBlocked ? "true" : "false",
+			this.isDeleted ? "true" : "false",
+		].join(",");
 	}
 
 	fromCSV(values) {
@@ -45,9 +49,18 @@ class User {
 			this.birthDate,
 			this.role,
 			this.subtypeId,
+			this.isBlocked,
+			this.isDeleted,
 		] = values;
+
 		this.id = parseInt(this.id);
-		this.subtypeId = parseInt(this.subtypeId);
+		this.subtypeId = this.subtypeId ? parseInt(this.subtypeId) : null;
+		this.isBlocked = this.isBlocked
+			? this.isBlocked.toLowerCase() === "true"
+			: false;
+		this.isDeleted = this.isDeleted
+			? this.isDeleted.toLowerCase() === "true"
+			: false;
 	}
 }
 

@@ -5,7 +5,7 @@ class Manager {
 	}
 
 	toCSV() {
-		return [this.id, this.userId, this.factoryId];
+		return [this.id, this.factoryId];
 	}
 
 	fromCSV(values) {
