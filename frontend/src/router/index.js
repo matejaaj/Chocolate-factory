@@ -9,6 +9,7 @@ import AdminPage from "@/views/AdminPage.vue";
 import CreateFactory from "@/components/CreateFactory.vue";
 import ViewUsers from "@/components/ViewUsers.vue";
 import auth from "@/services/auth";
+import UserRegister from "@/views/UserRegister.vue";
 
 const routes = [
 	{ path: "/home", component: HomePage },
@@ -45,6 +46,12 @@ const routes = [
 				component: ViewUsers,
 			},
 		],
+	},
+	{
+		path: "/register",
+		component: UserRegister,
+		props: true,
+		meta: { requiresAuth: false },
 	},
 ];
 

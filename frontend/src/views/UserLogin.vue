@@ -14,6 +14,9 @@
 			<p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 			<p v-if="successMessage" class="success">{{ successMessage }}</p>
 		</form>
+		<p class="register-link">
+			or <a @click.prevent="goToRegister">Register</a>
+		</p>
 	</div>
 </template>
 
@@ -34,9 +37,9 @@ export default {
 
 		const redirectToRoleBasedPage = (role) => {
 			const roleRoutes = {
-				MANAGER: "/factories", // Example route for MANAGER role
-				ADMIN: "/admin", // Example route for ADMIN role
-				default: "/",
+				MANAGER: "/factories",
+				ADMINISTRATOR: "/admin",
+				default: "/factories",
 			};
 			const route = roleRoutes[role] || roleRoutes.default;
 			router.push(route);
@@ -72,12 +75,17 @@ export default {
 			}
 		};
 
+		const goToRegister = () => {
+			router.push("/register");
+		};
+
 		return {
 			username,
 			password,
 			errorMessage,
 			successMessage,
 			handleLogin,
+			goToRegister,
 		};
 	},
 };
@@ -113,5 +121,15 @@ button {
 .success {
 	color: green;
 	margin-top: 10px;
+}
+
+.register-link {
+	margin-top: 10px;
+}
+
+.register-link a {
+	color: blue;
+	cursor: pointer;
+	text-decoration: underline;
 }
 </style>

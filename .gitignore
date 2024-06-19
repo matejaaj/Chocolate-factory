@@ -244,4 +244,8 @@ dist/
 npm-debug.log
 yarn-error.log
 
+
+
+/backend/uploads/
+
 # End of https://www.toptal.com/developers/gitignore/api/node,visualstudiocode,vuejs,vue,eclipse

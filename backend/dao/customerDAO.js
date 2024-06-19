@@ -14,7 +14,6 @@ class CustomerDAO {
 	}
 
 	save(customer) {
-		customer.id = this.nextId();
 		this.customers = this.serializer.fromCSV(this.filePath, Customer);
 		this.customers.push(customer);
 		this.serializer.toCSV(this.filePath, this.customers);

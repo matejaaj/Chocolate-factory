@@ -1,12 +1,12 @@
 class Customer {
-	constructor(id, points = 0, customerTypeId = null) {
-		this.points = points;
-		this.customerTypeId = customerTypeId;
+	constructor(id) {
+		this.points = 0;
+		this.customerTypeId = 0;
 		this.id = id;
 	}
 
 	toCSV() {
-		return [this.id, this.userId, this.points, this.customerTypeId];
+		return [this.id, this.points, this.customerTypeId];
 	}
 
 	fromCSV(values) {

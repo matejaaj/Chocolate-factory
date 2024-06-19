@@ -86,6 +86,8 @@
 				</div>
 			</div>
 			<button type="submit">Create Factory</button>
+			<p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+			<p v-if="successMessage" class="success">{{ successMessage }}</p>
 		</form>
 	</div>
 </template>
@@ -130,6 +132,8 @@ export default {
 			birthDate: "",
 		});
 
+		const errorMessage = ref("");
+		const successMessage = ref("");
 		const router = useRouter();
 
 		const fetchManagers = async () => {
@@ -144,6 +148,69 @@ export default {
 				}
 			} catch (error) {
 				console.error("Error fetching managers:", error);
+			}
+		};
+
+		const validateFactoryDetails = (factoryDetails) => {
+			const {
+				name,
+				location: { street, city, postalCode },
+			} = factoryDetails;
+
+			if (!/^[a-zA-Z]{1,20}$/.test(name)) {
+				throw new Error(
+					"Factory name must contain only letters and max length of 20 characters."
+				);
+			}
+
+			if (!/^[a-zA-Z0-9\s]{1,20}$/.test(city)) {
+				throw new Error(
+					"City must be alphanumeric and max length of 20 characters."
+				);
+			}
+
+			if (!/^[a-zA-Z0-9\s]{1,20}$/.test(street)) {
+				throw new Error(
+					"Street must be alphanumeric and max length of 20 characters."
+				);
+			}
+
+			if (!/^\d{1,10}$/.test(postalCode)) {
+				throw new Error(
+					"Postal code must contain only numbers and max length of 10 characters."
+				);
+			}
+		};
+
+		const validateUserDetails = (userDetails) => {
+			const { username, firstName, lastName, gender, birthDate } = userDetails;
+
+			if (!/^[a-zA-Z0-9]{1,15}$/.test(username)) {
+				throw new Error(
+					"Username must be alphanumeric and max length of 15 characters."
+				);
+			}
+
+			if (!/^[a-zA-Z]{1,20}$/.test(firstName)) {
+				throw new Error(
+					"First name must contain only letters and max length of 20 characters."
+				);
+			}
+
+			if (!/^[a-zA-Z]{1,20}$/.test(lastName)) {
+				throw new Error(
+					"Last name must contain only letters and max length of 20 characters."
+				);
+			}
+
+			if (!/^[a-zA-Z]{1,10}$/.test(gender)) {
+				throw new Error(
+					"Gender must contain only letters and max length of 10 characters."
+				);
+			}
+
+			if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate)) {
+				throw new Error("Birth date must be in the format YYYY-MM-DD.");
 			}
 		};
 
@@ -174,13 +241,20 @@ export default {
 		};
 
 		const submitForm = async () => {
+			errorMessage.value = "";
+			successMessage.value = "";
+
 			try {
 				if (
 					!selectedManager.value &&
 					newManager.value.password !== newManager.value.confirmPassword
 				) {
-					alert("Passwords do not match");
-					return;
+					throw new Error("Passwords do not match");
+				}
+
+				validateFactoryDetails(factory.value);
+				if (!selectedManager.value) {
+					validateUserDetails(newManager.value);
 				}
 
 				const formData = new FormData();
@@ -234,14 +308,16 @@ export default {
 				);
 
 				if (response.status === 201) {
-					alert("Factory created successfully!");
-					router.push("/factories");
+					successMessage.value = "Factory created successfully!";
+					setTimeout(() => {
+						router.push("/factories");
+					}, 1000);
 				} else {
-					alert("Failed to create factory.");
+					throw new Error("Failed to create factory.");
 				}
 			} catch (error) {
 				console.error("Error creating factory:", error);
-				alert("Failed to create factory.");
+				errorMessage.value = error.message;
 			}
 		};
 
@@ -314,6 +390,8 @@ export default {
 			newManager,
 			onFileChange,
 			submitForm,
+			errorMessage,
+			successMessage,
 		};
 	},
 };

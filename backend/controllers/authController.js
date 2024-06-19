@@ -48,6 +48,43 @@ class AuthController {
 			res.status(200).json({ isAuthenticated: false });
 		}
 	}
+
+	async register(req, res) {
+		const {
+			username,
+			password,
+			confirmPassword,
+			firstName,
+			lastName,
+			gender,
+			birthDate,
+		} = req.body;
+
+		if (password !== confirmPassword) {
+			return res.status(400).json({ message: "Passwords do not match" });
+		}
+
+		try {
+			const result = await this.authService.register({
+				username,
+				password,
+				firstName,
+				lastName,
+				gender,
+				birthDate,
+			});
+			if (result) {
+				res.status(201).json({ message: "Registration successful" });
+			} else {
+				res
+					.status(400)
+					.json({ message: "Registration failed. User might already exist." });
+			}
+		} catch (err) {
+			console.error("Error during registration:", err); // Log the error
+			res.status(400).json({ message: err.message });
+		}
+	}
 }
 
 module.exports = AuthController;
