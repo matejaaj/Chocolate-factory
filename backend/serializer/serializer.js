@@ -1,4 +1,3 @@
-// serializer/serializer.js
 const fs = require("fs");
 
 class Serializer {

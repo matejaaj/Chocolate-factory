@@ -1,10 +1,13 @@
 const FactoryService = require("../services/factoryService");
 const ManagerService = require("../services/managerService");
+const FactoryCreationService = require("../services/factoryCreationService");
+const CreateFactoryDTO = require("../dto/CreateFactoryDTO");
 
 class FactoryController {
 	constructor() {
 		this.factoryService = new FactoryService();
 		this.managerService = new ManagerService();
+		this.factoryCreationService = new FactoryCreationService();
 	}
 
 	getAllFactories(req, res) {
@@ -40,11 +43,31 @@ class FactoryController {
 		}
 	}
 
-	createFactory(req, res) {
-		const newFactory = this.factoryService.createFactory(req.body);
-		res.status(201).json(newFactory);
-	}
+	async createFactory(req, res) {
+		try {
+			if (!req.userId || req.role !== "ADMIN") {
+				return res.status(403).json({ message: "Forbidden: Admins only" });
+			}
 
+			const admin = await this.administratorService.getAdministratorById(
+				req.userId
+			);
+			if (!admin) {
+				return res.status(403).json({ message: "Forbidden: Admins only" });
+			}
+
+			const { factory, selectedManagerId, managerDetails } = req.body;
+			const dto = new CreateFactoryDTO(
+				factory,
+				selectedManagerId,
+				managerDetails
+			);
+			const newFactory = await this.factoryCreationService.createFactory(dto);
+			res.status(201).json(newFactory);
+		} catch (error) {
+			res.status(500).json({ message: error.message });
+		}
+	}
 	updateFactory(req, res) {
 		const updatedFactory = this.factoryService.updateFactory(
 			req.params.id,
@@ -63,6 +86,22 @@ class FactoryController {
 			res.status(204).send();
 		} else {
 			res.status(404).json({ message: "Factory not found" });
+		}
+	}
+
+	async createFactory(req, res) {
+		try {
+			const { factory, selectedManagerId, managerDetails, location } = req.body;
+			const dto = new CreateFactoryDTO(
+				factory,
+				selectedManagerId,
+				managerDetails,
+				location
+			);
+			const newFactory = await this.factoryCreationService.createFactory(dto);
+			res.status(201).json(newFactory);
+		} catch (error) {
+			res.status(500).json({ message: error.message });
 		}
 	}
 }

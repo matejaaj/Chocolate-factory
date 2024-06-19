@@ -78,7 +78,6 @@
 					<select v-model="newManager.gender" required>
 						<option value="Male">Male</option>
 						<option value="Female">Female</option>
-						<option value="Other">Other</option>
 					</select>
 				</div>
 				<div>
@@ -90,10 +89,10 @@
 		</form>
 	</div>
 </template>
-
 <script>
 import axios from "axios";
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import "ol/ol.css";
 import { Map, View, Feature } from "ol";
 import TileLayer from "ol/layer/Tile";
@@ -130,10 +129,13 @@ export default {
 			birthDate: "",
 		});
 
+		const router = useRouter();
+
 		const fetchManagers = async () => {
 			try {
 				const response = await axios.get(
-					"http://localhost:3000/rest/managers/available-managers"
+					"http://localhost:3000/rest/managers/available-managers",
+					{ withCredentials: true }
 				);
 				managers.value = response.data;
 				if (managers.value.length === 0) {
@@ -150,37 +152,42 @@ export default {
 
 		const submitForm = async () => {
 			try {
-				let managerId = selectedManager.value;
-
-				if (!managerId) {
-					if (newManager.value.password !== newManager.value.confirmPassword) {
-						alert("Passwords do not match");
-						return;
-					}
-
-					// No manager selected, create a new manager first
-					const managerResponse = await axios.post("/rest/managers", {
-						username: newManager.value.username,
-						password: newManager.value.password,
-						firstName: newManager.value.firstName,
-						lastName: newManager.value.lastName,
-						gender: newManager.value.gender,
-						birthDate: newManager.value.birthDate,
-					});
-					managerId = managerResponse.data.id;
+				if (
+					!selectedManager.value &&
+					newManager.value.password !== newManager.value.confirmPassword
+				) {
+					alert("Passwords do not match");
+					return;
 				}
 
-				// Create the factory
-				const formData = new FormData();
-				formData.append("name", factory.value.name);
-				formData.append("workingHours", factory.value.workingHours);
-				formData.append("logo", factory.value.logo);
-				formData.append("managerId", managerId);
-				formData.append("location", JSON.stringify(factory.value.location));
+				const dto = {
+					factory: {
+						name: factory.value.name,
+						workingHours: factory.value.workingHours,
+						status: "open", // or any default status
+						location: factory.value.location,
+						logo: factory.value.logo,
+						rating: 0, // or any default rating
+					},
+					managerDetails: newManager.value,
+					selectedManagerId: selectedManager.value,
+				};
 
-				await axios.post("/rest/factories", formData);
+				const response = await axios.post(
+					"http://localhost:3000/rest/factories/",
+					dto,
+					{ withCredentials: true }
+				);
+
+				if (response.status === 201) {
+					alert("Factory created successfully!");
+					router.push("/factories");
+				} else {
+					alert("Failed to create factory.");
+				}
 			} catch (error) {
 				console.error("Error creating factory:", error);
+				alert("Failed to create factory.");
 			}
 		};
 
@@ -257,7 +264,6 @@ export default {
 	},
 };
 </script>
-
 <style>
 #create-factory {
 	font-family: Avenir, Helvetica, Arial, sans-serif;

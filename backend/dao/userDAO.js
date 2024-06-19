@@ -18,6 +18,7 @@ class UserDAO {
 		user.id = this.nextId();
 		this.users = this.serializer.fromCSV(this.filePath, User);
 		this.users.push(user);
+
 		this.serializer.toCSV(this.filePath, this.users);
 		return user;
 	}

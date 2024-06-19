@@ -14,7 +14,6 @@ class ManagerDAO {
 	}
 
 	save(manager) {
-		manager.id = this.nextId();
 		this.managers = this.serializer.fromCSV(this.filePath, Manager);
 		this.managers.push(manager);
 		this.serializer.toCSV(this.filePath, this.managers);

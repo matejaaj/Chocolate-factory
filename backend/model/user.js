@@ -6,8 +6,7 @@ class User {
 		lastName,
 		gender,
 		birthDate,
-		role = null,
-		subtypeId = null
+		role = null
 	) {
 		this.id = null;
 		this.username = username;
@@ -17,7 +16,6 @@ class User {
 		this.gender = gender;
 		this.birthDate = birthDate;
 		this.role = role;
-		this.subtypeId = subtypeId;
 		this.isBlocked = false;
 		this.isDeleted = false;
 	}
@@ -32,10 +30,9 @@ class User {
 			this.gender,
 			this.birthDate,
 			this.role,
-			this.subtypeId,
 			this.isBlocked ? "true" : "false",
 			this.isDeleted ? "true" : "false",
-		].join(",");
+		];
 	}
 
 	fromCSV(values) {
@@ -48,13 +45,11 @@ class User {
 			this.gender,
 			this.birthDate,
 			this.role,
-			this.subtypeId,
 			this.isBlocked,
 			this.isDeleted,
 		] = values;
 
 		this.id = parseInt(this.id);
-		this.subtypeId = this.subtypeId ? parseInt(this.subtypeId) : null;
 		this.isBlocked = this.isBlocked
 			? this.isBlocked.toLowerCase() === "true"
 			: false;

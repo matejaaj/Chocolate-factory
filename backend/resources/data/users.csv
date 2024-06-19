@@ -1,6 +1,5 @@
 1|mateja|mateja123|John|Doe|Male|1990-01-01|CUSTOMER|false|false
-2|admin|mateja123|John|Doe|Male|1990-01-01|ADMIN|false|false
+2|admin|mateja123|John|Doe|Male|1990-01-01|ADMINISTRATOR|false|false
 3|manager|manager|John|Doe|Male|1990-01-01|MANAGER|false|false
 4|customer|customer|John|Doe|Male|1990-01-01|CUSTOMER|false|false
 5|employee|employee|John|Doe|Male|1990-01-01|EMPLOYEE|false|false
-6|manager2|manager2|John|Doe|Male|1990-01-01|EMPLOYEE|false|false

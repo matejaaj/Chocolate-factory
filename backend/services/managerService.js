@@ -17,28 +17,14 @@ class ManagerService {
 	}
 
 	createManager(data) {
-		const newManager = new Manager(
-			data.username,
-			data.password,
-			data.firstName,
-			data.lastName,
-			data.gender,
-			data.dob,
-			data.factory
-		);
+		const newManager = new Manager(data.userId, data.factoryId);
 		return this.managerDAO.save(newManager);
 	}
 
 	updateManager(id, data) {
 		const existingManager = this.managerDAO.getById(id);
 		if (existingManager) {
-			existingManager.username = data.username || existingManager.username;
-			existingManager.password = data.password || existingManager.password;
-			existingManager.firstName = data.firstName || existingManager.firstName;
-			existingManager.lastName = data.lastName || existingManager.lastName;
-			existingManager.gender = data.gender || existingManager.gender;
-			existingManager.dob = data.dob || existingManager.dob;
-			existingManager.factory = data.factory || existingManager.factory;
+			existingManager.factoryId = data.factoryId;
 			return this.managerDAO.update(existingManager);
 		}
 		return null;

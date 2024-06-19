@@ -7,7 +7,10 @@ const factoryController = new FactoryController();
 
 router.get("/", (req, res) => factoryController.getAllFactories(req, res));
 
-router.post("/", (req, res) => factoryController.createFactory(req, res));
+router.post("/", authenticateToken, (req, res) =>
+	factoryController.createFactory(req, res)
+);
+
 router.get("/:id", (req, res) => {
 	factoryController.getFactoryById(req, res);
 });

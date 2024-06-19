@@ -34,7 +34,7 @@ const routes = [
 		path: "/admin",
 		component: AdminPage,
 		props: true,
-		meta: { requiresAuth: true, role: "ADMIN" },
+		meta: { requiresAuth: true, role: "ADMINISTRATOR" },
 		children: [
 			{
 				path: "create-factory",
