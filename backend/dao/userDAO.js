@@ -51,6 +51,7 @@ class UserDAO {
 	}
 
 	getById(userId) {
+		userId = parseInt(userId);
 		this.users = this.serializer.fromCSV(this.filePath, User);
 		return this.users.find((user) => user.id === userId && !user.isDeleted);
 	}

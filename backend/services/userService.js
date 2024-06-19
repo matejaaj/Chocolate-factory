@@ -1,38 +1,52 @@
 const UserDAO = require("../dao/userDAO");
-const ManagerDAO = require("../dao/managerDAO");
-const User = require("../model/user");
 
 class UserService {
 	constructor() {
 		this.userDAO = new UserDAO();
 	}
 
-	async createUser(data) {
-		const existingUser = this.userDAO.findByUsername(data.username);
-		if (existingUser) {
-			throw new Error("Username already exists");
-		}
-
-		const newUser = new User(
-			data.username,
-			data.password,
-			data.firstName,
-			data.lastName,
-			data.gender,
-			data.birthDate,
-			data.role
-		);
-
-		const savedUser = this.userDAO.save(newUser);
-		return savedUser;
+	getAllUsers() {
+		return this.userDAO.getAll();
 	}
 
-	getUserByUsername(username) {
-		return this.userDAO.findByUsername(username);
+	saveUser(user) {
+		return this.userDAO.save(user);
+	}
+
+	updateUser(user) {
+		return this.userDAO.update(user);
+	}
+
+	deleteUser(user) {
+		this.userDAO.delete(user);
 	}
 
 	getUserById(userId) {
 		return this.userDAO.getById(userId);
+	}
+
+	findUserByUsername(username) {
+		return this.userDAO.findByUsername(username);
+	}
+
+	blockUser(userId) {
+		console.log("User to be blocked ID: " + userId);
+		const user = this.getUserById(userId);
+		if (user && user.role !== "ADMINISTRATOR") {
+			user.isBlocked = true;
+			return this.userDAO.update(user);
+		}
+		return null;
+	}
+
+	unblockUser(userId) {
+		console.log("User to be unblocked ID: " + userId);
+		const user = this.getUserById(userId);
+		if (user && user.role !== "ADMINISTRATOR") {
+			user.isBlocked = false;
+			return this.userDAO.update(user);
+		}
+		return null;
 	}
 }
 

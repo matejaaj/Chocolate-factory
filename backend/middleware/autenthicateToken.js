@@ -10,10 +10,10 @@ const authenticateToken = (req, res, next) => {
 	}
 
 	try {
-		const decoded = jwt.verify(token, "your_secret_key"); // Use the same secret key as in AuthService
+		const decoded = jwt.verify(token, "your_secret_key");
 		req.userId = decoded.id;
 		req.role = decoded.role;
-		console.log("Token decoded and req.userId set:", req.userId); // Debug log
+		console.log("Token decoded and req.userId set:", req.userId);
 		next();
 	} catch (err) {
 		console.log("Invalid token:", err);
