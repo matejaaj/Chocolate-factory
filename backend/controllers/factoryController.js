@@ -33,6 +33,7 @@ class FactoryController {
 
 		return res.json({ isManager: false });
 	}
+
 	async getFactoryById(req, res) {
 		const factoryId = parseInt(req.params.id, 10);
 		const factory = await this.factoryService.getFactoryById(factoryId);
@@ -45,18 +46,41 @@ class FactoryController {
 
 	async createFactory(req, res) {
 		try {
-			if (!req.userId || req.role !== "ADMIN") {
+			if (!req.userId || req.role !== "ADMINISTRATOR") {
 				return res.status(403).json({ message: "Forbidden: Admins only" });
 			}
 
-			const admin = await this.administratorService.getAdministratorById(
-				req.userId
-			);
-			if (!admin) {
-				return res.status(403).json({ message: "Forbidden: Admins only" });
-			}
+			console.log("USERNAME" + req.body.username);
 
-			const { factory, selectedManagerId, managerDetails } = req.body;
+			const factory = {
+				name: req.body.name,
+				workingHours: req.body.workingHours,
+				status: req.body.status,
+				location: {
+					latitude: req.body.latitude,
+					longitude: req.body.longitude,
+					street: req.body.street,
+					city: req.body.city,
+					postalCode: req.body.postalCode,
+				},
+				logo: req.file ? req.file.path : null,
+				rating: req.body.rating,
+			};
+
+			const selectedManagerId =
+				req.body.selectedManagerId === "null"
+					? null
+					: req.body.selectedManagerId;
+			const managerDetails = {
+				username: req.body.username,
+				password: req.body.password,
+				confirmPassword: req.body.confirmPassword,
+				firstName: req.body.firstName,
+				lastName: req.body.lastName,
+				gender: req.body.gender,
+				birthDate: req.body.birthDate,
+			};
+
 			const dto = new CreateFactoryDTO(
 				factory,
 				selectedManagerId,
@@ -68,6 +92,7 @@ class FactoryController {
 			res.status(500).json({ message: error.message });
 		}
 	}
+
 	updateFactory(req, res) {
 		const updatedFactory = this.factoryService.updateFactory(
 			req.params.id,
@@ -86,22 +111,6 @@ class FactoryController {
 			res.status(204).send();
 		} else {
 			res.status(404).json({ message: "Factory not found" });
-		}
-	}
-
-	async createFactory(req, res) {
-		try {
-			const { factory, selectedManagerId, managerDetails, location } = req.body;
-			const dto = new CreateFactoryDTO(
-				factory,
-				selectedManagerId,
-				managerDetails,
-				location
-			);
-			const newFactory = await this.factoryCreationService.createFactory(dto);
-			res.status(201).json(newFactory);
-		} catch (error) {
-			res.status(500).json({ message: error.message });
 		}
 	}
 }

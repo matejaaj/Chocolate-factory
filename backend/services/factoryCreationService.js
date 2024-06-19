@@ -12,6 +12,7 @@ class FactoryCreationService {
 	}
 
 	async createFactory(dto) {
+		console.log(dto);
 		try {
 			const location = await this._createLocation(dto.factory.location);
 			const factory = await this._createFactory(dto.factory, location.id);

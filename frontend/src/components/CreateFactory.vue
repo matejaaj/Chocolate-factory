@@ -89,6 +89,7 @@
 		</form>
 	</div>
 </template>
+
 <script>
 import axios from "axios";
 import { ref, onMounted } from "vue";
@@ -147,7 +148,29 @@ export default {
 		};
 
 		const onFileChange = (event) => {
-			factory.value.logo = event.target.files[0];
+			const file = event.target.files[0];
+			const allowedTypes = ["image/jpeg", "image/png"];
+			const maxFileSize = 5 * 1024 * 1024; // 5MB
+
+			if (file) {
+				if (!allowedTypes.includes(file.type)) {
+					alert("Invalid file type. Only JPEG and PNG are allowed.");
+					event.target.value = null; // Reset the input field
+					factory.value.logo = null;
+					return;
+				}
+
+				if (file.size > maxFileSize) {
+					alert("File size exceeds the maximum limit of 5MB.");
+					event.target.value = null; // Reset the input field
+					factory.value.logo = null;
+					return;
+				}
+
+				factory.value.logo = file;
+			} else {
+				factory.value.logo = null;
+			}
 		};
 
 		const submitForm = async () => {
@@ -160,23 +183,54 @@ export default {
 					return;
 				}
 
-				const dto = {
-					factory: {
-						name: factory.value.name,
-						workingHours: factory.value.workingHours,
-						status: "open", // or any default status
-						location: factory.value.location,
-						logo: factory.value.logo,
-						rating: 0, // or any default rating
-					},
-					managerDetails: newManager.value,
-					selectedManagerId: selectedManager.value,
+				const formData = new FormData();
+				const factoryData = {
+					name: factory.value.name,
+					workingHours: factory.value.workingHours,
+					status: "open",
+					latitude: factory.value.location.latitude,
+					longitude: factory.value.location.longitude,
+					street: factory.value.location.street,
+					city: factory.value.location.city,
+					postalCode: factory.value.location.postalCode,
+					logo: factory.value.logo,
+					rating: 0,
+					selectedManagerId: selectedManager.value
+						? selectedManager.value
+						: "null",
 				};
+
+				const managerDetails = {
+					username: newManager.value.username,
+					password: newManager.value.password,
+					confirmPassword: newManager.value.confirmPassword,
+					firstName: newManager.value.firstName,
+					lastName: newManager.value.lastName,
+					gender: newManager.value.gender,
+					birthDate: newManager.value.birthDate,
+				};
+
+				// Append factory data
+				Object.keys(factoryData).forEach((key) => {
+					if (factoryData[key] !== null) {
+						formData.append(key, factoryData[key]);
+					}
+				});
+
+				// Append manager details
+				Object.keys(managerDetails).forEach((key) => {
+					if (managerDetails[key]) {
+						formData.append(key, managerDetails[key]);
+					}
+				});
 
 				const response = await axios.post(
 					"http://localhost:3000/rest/factories/",
-					dto,
-					{ withCredentials: true }
+					formData,
+					{
+						withCredentials: true,
+						headers: { "Content-Type": "multipart/form-data" },
+					}
 				);
 
 				if (response.status === 201) {
@@ -264,6 +318,7 @@ export default {
 	},
 };
 </script>
+
 <style>
 #create-factory {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
