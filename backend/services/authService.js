@@ -9,7 +9,7 @@ class AuthService {
 	}
 
 	login(username, password) {
-		const user = this.userService.getUserByUsername(username);
+		const user = this.userService.findUserByUsername(username);
 		if (user && user.password === password) {
 			const token = jwt.sign(
 				{ id: user.id, username: user.username, role: user.role },
@@ -37,7 +37,7 @@ class AuthService {
 
 		const { username, password, firstName, lastName, gender, birthDate } =
 			userDetails;
-		const existingUser = await this.userService.getUserByUsername(username);
+		const existingUser = await this.userService.findUserByUsername(username);
 
 		if (existingUser) {
 			return null;

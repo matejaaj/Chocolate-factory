@@ -8,6 +8,7 @@ import UserLogin from "@/views/UserLogin.vue";
 import AdminPage from "@/views/AdminPage.vue";
 import CreateFactory from "@/components/CreateFactory.vue";
 import ViewUsers from "@/components/ViewUsers.vue";
+import Cart from "@/views/CartView.vue"; 
 import auth from "@/services/auth";
 import UserRegister from "@/views/UserRegister.vue";
 
@@ -52,6 +53,11 @@ const routes = [
 		component: UserRegister,
 		props: true,
 		meta: { requiresAuth: false },
+	},
+	{
+		path: "/cart",
+		component: Cart,
+		meta: { requiresAuth: true, role: "CUSTOMER" },
 	},
 ];
 

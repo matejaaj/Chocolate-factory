@@ -17,7 +17,7 @@ class FactoryController {
 
 	async isUserManager(req, res) {
 		if (!req.userId) {
-			return res.status(500).json({ message: "Unauthorized access" });
+			return res.status(403).json({ message: "Unauthorized access" });
 		}
 
 		const factoryId = parseInt(req.params.factoryId, 10);

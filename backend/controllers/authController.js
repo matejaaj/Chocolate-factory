@@ -85,6 +85,20 @@ class AuthController {
 			res.status(400).json({ message: err.message });
 		}
 	}
+
+	getRole(req, res) {
+		const token = req.cookies.token;
+		if (!token) {
+		  return res.status(403).json({ message: "Unauthorized" });
+		}
+	
+		try {
+		  const decoded = jwt.verify(token, "your_secret_key");
+		  res.status(200).json({ role: decoded.role });
+		} catch (err) {
+		  res.status(401).json({ message: "Invalid token" });
+		}
+	}
 }
 
 module.exports = AuthController;

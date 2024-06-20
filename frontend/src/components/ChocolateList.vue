@@ -4,7 +4,7 @@
 		<div v-if="isManager">
 			<button @click="addChocolate">Add New Chocolate</button>
 		</div>
-		<table v-if="chocolates.length">
+		<table v-if="filteredChocolates.length">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -16,11 +16,11 @@
 					<th>Image</th>
 					<th>Status</th>
 					<th>Quantity</th>
-					<th v-if="isManager">Actions</th>
+					<th v-if="isManager || isCustomer">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="chocolate in chocolates" :key="chocolate.id">
+				<tr v-for="chocolate in filteredChocolates" :key="chocolate.id">
 					<td>{{ chocolate.name }}</td>
 					<td>{{ chocolate.price }}</td>
 					<td>{{ chocolate.type }}</td>
@@ -28,16 +28,26 @@
 					<td>{{ chocolate.weight }}</td>
 					<td>{{ chocolate.description }}</td>
 					<td>
-						<img
-							:src="getChocolateImage(chocolate.image)"
-							alt="Chocolate Image"
-						/>
+						<img :src="getChocolateImage(chocolate.image)" alt="Chocolate Image" />
 					</td>
 					<td>{{ chocolate.status }}</td>
 					<td>{{ chocolate.quantity }}</td>
-					<td v-if="isManager">
-						<button @click="editChocolate(chocolate.id)">Edit</button>
-						<button @click="deleteChocolate(chocolate.id)">Delete</button>
+					<td>
+						<div v-if="isManager">
+							<button @click="editChocolate(chocolate.id)">Edit</button>
+							<button @click="deleteChocolate(chocolate.id)">Delete</button>
+						</div>
+						<div v-if="isCustomer">
+							<input
+								type="number"
+								v-model.number="quantities[chocolate.id]"
+								:max="chocolate.quantity"
+								min="1"
+							/>
+							<button @click="addToCart(chocolate, quantities[chocolate.id])">
+								Add to Cart
+							</button>
+						</div>
 					</td>
 				</tr>
 			</tbody>
@@ -63,14 +73,22 @@ export default {
 		return {
 			chocolates: [],
 			isManager: false, // Initialize isManager as false
+			isCustomer: false, // Initialize isCustomer as false
+			quantities: {} // To store quantities for each chocolate
 		};
 	},
 	computed: {
-		// Your other computed properties
+		filteredChocolates() {
+			if (this.isCustomer) {
+				return this.chocolates.filter(chocolate => chocolate.quantity > 0);
+			}
+			return this.chocolates;
+		}
 	},
 	created() {
 		this.fetchChocolates();
 		this.checkIfManager(); // Check if the user is a manager when the component is created
+		this.checkIfCustomer();
 	},
 	methods: {
 		async fetchChocolates() {
@@ -97,6 +115,19 @@ export default {
 				this.isManager = response.data.isManager;
 			} catch (error) {
 				console.error("Error checking manager status:", error);
+			}
+		},
+		async checkIfCustomer() {
+			try {
+				const response = await axios.get(`http://localhost:3000/auth/role`, {
+					withCredentials: true,
+				});
+				const role = response.data.role;
+				if (role === 'CUSTOMER') {
+					this.isCustomer = true;
+				}
+			} catch (error) {
+				console.error("Error checking user role:", error);
 			}
 		},
 		async deleteChocolate(chocolateId) {
@@ -128,7 +159,26 @@ export default {
 				return "";
 			}
 		},
-	},
+		async addToCart(chocolate, quantity) {
+			if (quantity > chocolate.quantity) {
+				alert("Quantity exceeds stock available");
+				return;
+			}
+			try {
+				const response = await axios.post(
+					"http://localhost:3000/cart/add",
+					{ chocolateId: chocolate.id, quantity, factoryId: this.factoryId },
+					{ withCredentials: true }
+				);
+				if (response.status === 201) {
+					alert(`Added ${quantity} of ${chocolate.name} to cart`);
+					chocolate.quantity -= quantity; // Update the quantity locally
+				}
+			} catch (error) {
+				console.error("Error adding to cart:", error);
+			}
+		}
+	}
 };
 </script>
 
