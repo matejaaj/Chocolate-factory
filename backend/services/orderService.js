@@ -2,34 +2,73 @@ const OrderDAO = require("../dao/orderDAO");
 const Order = require("../model/order");
 const CustomerService = require("./customerService");
 const CartService = require("./cartService");
+const ChocolateService = require("./chocolateService");
 
 class OrderService {
 	constructor() {
 		this.orderDAO = new OrderDAO();
 		this.customerService = new CustomerService();
 		this.cartService = new CartService();
+		this.chocolateService = new ChocolateService();
 	}
 
 	getAllOrders() {
 		return this.orderDAO.getAll();
 	}
 
-	createOrder(totalPrice, cartItemIds, userId) {
-		const newOrder = new Order(
-			userId,
-			totalPrice,
-			cartItemIds,
-			new Date().toISOString(),
-			"Obrada"
-		);
+	createOrder(userId) {
+		const cartItems = this.cartService.getCart(userId);
+		const groupedByFactory = {};
 
-		const createdOrder = this.orderDAO.save(newOrder);
+		cartItems.forEach(item => {
+			if (!groupedByFactory[item.factoryId]) {
+				groupedByFactory[item.factoryId] = [];
+			}
+			groupedByFactory[item.factoryId].push(item);
+		});
 
-		const points = (totalPrice / 1000) * 133;
-		this.customerService.addPoints(userId, points);
-		this.cartService.markItemsAsOrdered(cartItemIds);
+		const createdOrders = Object.keys(groupedByFactory).map(factoryId => {
+			const items = groupedByFactory[factoryId];
+			const totalPrice = items.reduce((acc, item) => {
+				const chocolate = this.chocolateService.getChocolateById(item.chocolateId);
+				return acc + (chocolate.price * item.quantity);
+			}, 0);
+			const cartItemIds = items.map(item => item.id);
+			const chocolateIds = items.map(item => item.chocolateId);
 
-		return createdOrder;
+			const newOrder = new Order(
+				userId,
+				totalPrice,
+				chocolateIds,
+				new Date().toISOString(),
+				"Obrada",
+				parseInt(factoryId)
+			);
+
+			this.orderDAO.save(newOrder);
+
+			const points = (totalPrice / 1000) * 133;
+			this.customerService.addPoints(userId, points);
+			this.cartService.markItemsAsOrdered(cartItemIds);
+
+			return newOrder;
+		});
+
+		return createdOrders;
+	}
+
+	cancelOrder(id) {
+		const existingOrder = this.orderDAO.getById(id);
+		if (existingOrder && existingOrder.status === "Obrada") {
+			existingOrder.status = "Otkazano";
+			this.orderDAO.update(existingOrder);
+
+			const pointsToDeduct = (existingOrder.totalPrice / 1000) * 133 * 4;
+			this.customerService.addPoints(existingOrder.userId, -pointsToDeduct);
+
+			return true;
+		}
+		return false;
 	}
 
 	getOrdersByUserId(userId) {
@@ -48,25 +87,6 @@ class OrderService {
 			return existingOrder;
 		}
 		return null;
-	}
-
-	cancelOrder(id) {
-		const existingOrder = this.orderDAO.getById(id);
-		if (existingOrder && existingOrder.status === "Obrada") {
-			existingOrder.status = "Otkazano";
-			this.orderDAO.update(existingOrder);
-
-			const totalPrice = existingOrder.totalPrice;
-			const points = - (totalPrice / 1000) * 133 * 4;
-			this.customerService.addPoints(existingOrder.userId, points);	
-
-			return true;
-		}
-		return false;
-	}
-
-	getOrdersByUserId(userId) {
-		return this.orderDAO.getAll().filter(order => order.userId == userId);
 	}
 }
 

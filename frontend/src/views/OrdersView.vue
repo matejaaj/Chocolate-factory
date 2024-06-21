@@ -5,6 +5,7 @@
 			<thead>
 				<tr>
 					<th>Order ID</th>
+					<th>Factory Name</th>
 					<th>Total Price</th>
 					<th>Date</th>
 					<th>Status</th>
@@ -14,6 +15,7 @@
 			<tbody>
 				<tr v-for="order in orders" :key="order.id">
 					<td>{{ order.id }}</td>
+					<td>{{ order.factoryName }}</td>
 					<td>{{ order.totalPrice }}</td>
 					<td>{{ formatDate(order.date) }}</td>
 					<td>{{ order.status }}</td>
@@ -31,10 +33,10 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 
 export default {
-	name: "OrdersView",
+	name: 'OrdersView',
 	data() {
 		return {
 			orders: [],
@@ -46,12 +48,23 @@ export default {
 	methods: {
 		async fetchOrders() {
 			try {
-				const response = await axios.get("http://localhost:3000/rest/orders", {
+				const response = await axios.get('http://localhost:3000/rest/orders', {
 					withCredentials: true,
 				});
-				this.orders = response.data;
+
+				const ordersWithFactoryNames = await Promise.all(
+					response.data.map(async (order) => {
+						const factoryResponse = await axios.get(`http://localhost:3000/rest/factories/${order.factoryId}`, {
+							withCredentials: true,
+						});
+						order.factoryName = factoryResponse.data.name;
+						return order;
+					})
+				);
+
+				this.orders = ordersWithFactoryNames;
 			} catch (error) {
-				console.error("Error fetching orders:", error);
+				console.error('Error fetching orders:', error);
 			}
 		},
 		formatDate(dateString) {
@@ -70,10 +83,10 @@ export default {
 					withCredentials: true,
 				});
 				this.fetchOrders();
-				alert("Order cancelled successfully");
+				alert('Order cancelled successfully');
 			} catch (error) {
-				console.error("Error cancelling order:", error);
-				alert("Error cancelling order");
+				console.error('Error cancelling order:', error);
+				alert('Error cancelling order');
 			}
 		}
 	},

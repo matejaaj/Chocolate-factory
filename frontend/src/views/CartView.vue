@@ -111,16 +111,12 @@ export default {
 			}
 		},
 		async createOrder() {
-			const cartItemIds = this.cartItems.map(item => item.id);
-			const totalPrice = this.total;
 			try {
-				await axios.post("http://localhost:3000/rest/orders", {
-					totalPrice,
-					cartItemIds
-				}, { withCredentials: true });
+				await axios.post("http://localhost:3000/rest/orders", {}, { withCredentials: true });
 				alert("Order created successfully!");
 				this.cartItems = [];
 				this.total = 0;
+				this.fetchCart();
 			} catch (error) {
 				console.error("Error creating order:", error);
 			}

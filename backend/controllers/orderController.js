@@ -11,25 +11,9 @@ class OrderController {
 	}
 
 	createOrder(req, res) {
-		const { totalPrice, cartItemIds } = req.body;
 		const userId = req.userId;
-		const newOrder = this.orderService.createOrder(totalPrice, cartItemIds, userId);
-		res.status(201).json(newOrder);
-	}
-
-	cancelOrder(req, res) {
-		const success = this.orderService.cancelOrder(req.params.id);
-		if (success) {
-			res.status(204).send();
-		} else {
-			res.status(404).json({ message: "Order not found or cannot be cancelled" });
-		}
-	}
-
-	getOrdersByUserId(req, res) {
-		const userId = req.userId;
-		const orders = this.orderService.getOrdersByUserId(userId);
-		res.json(orders);
+		const createdOrders = this.orderService.createOrder(userId);
+		res.status(201).json(createdOrders);
 	}
 
 	getOrderById(req, res) {
@@ -39,6 +23,11 @@ class OrderController {
 		} else {
 			res.status(404).json({ message: "Order not found" });
 		}
+	}
+
+	getOrdersByUserId(req, res) {
+		const orders = this.orderService.getOrdersByUserId(req.userId);
+		res.json(orders);
 	}
 
 	updateOrder(req, res) {
