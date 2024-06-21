@@ -17,6 +17,15 @@ class OrderController {
 		res.status(201).json(newOrder);
 	}
 
+	cancelOrder(req, res) {
+		const success = this.orderService.cancelOrder(req.params.id);
+		if (success) {
+			res.status(204).send();
+		} else {
+			res.status(404).json({ message: "Order not found or cannot be cancelled" });
+		}
+	}
+
 	getOrdersByUserId(req, res) {
 		const userId = req.userId;
 		const orders = this.orderService.getOrdersByUserId(userId);

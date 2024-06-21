@@ -5,7 +5,8 @@ class Cart {
 		this.chocolateId = chocolateId;
 		this.quantity = quantity;
 		this.factoryId = factoryId;
-		this.isDeleted = false; // Add isDeleted property
+		this.isDeleted = false;
+		this.isOrdered = false;
 	}
 
 	toCSV() {
@@ -16,6 +17,7 @@ class Cart {
 			this.quantity,
 			this.factoryId,
 			this.isDeleted ? "true" : "false",
+			this.isOrdered ? "true" : "false",
 		];
 	}
 
@@ -27,10 +29,12 @@ class Cart {
 			this.quantity,
 			this.factoryId,
 			this.isDeleted,
+			this.isOrdered,
 		] = values;
 		this.id = parseInt(this.id);
 		this.quantity = parseInt(this.quantity);
 		this.isDeleted = this.isDeleted ? this.isDeleted.toLowerCase() === "true" : false;
+		this.isOrdered = this.isOrdered ? this.isOrdered.toLowerCase() === "true" : false;
 	}
 }
 

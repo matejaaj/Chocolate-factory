@@ -37,6 +37,10 @@ class CartService {
 	removeCartItem(userId, chocolateId) {
 		this.cartDAO.deleteByUserIdAndChocolateId(userId, chocolateId);
 	}
+	
+	markItemsAsOrdered(cartItemIds) {
+		this.cartDAO.markAsOrdered(cartItemIds);
+	}
 
 	clearCart(userId) {
 		this.cartDAO.clearByUserId(userId);
