@@ -15,7 +15,7 @@
 				<tr v-for="order in orders" :key="order.id">
 					<td>{{ order.id }}</td>
 					<td>{{ order.totalPrice }}</td>
-					<td>{{ order.date }}</td>
+					<td>{{ formatDate(order.date) }}</td>
 					<td>{{ order.status }}</td>
 					<td>
 						<button @click="viewOrderDetails(order.id)">View Details</button>
@@ -52,6 +52,13 @@ export default {
 			} catch (error) {
 				console.error("Error fetching orders:", error);
 			}
+		},
+		formatDate(dateString) {
+			const date = new Date(dateString);
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			return `${year}.${month}.${day}`;
 		},
 		viewOrderDetails(orderId) {
 			this.$router.push(`/order-details/${orderId}`);

@@ -29,7 +29,7 @@ class OrderDAO {
 
 	getById(orderId) {
 		this.orders = this.serializer.fromCSV(this.filePath, Order);
-		return this.orders.find(order => order.id === orderId && !order.isDeleted);
+		return this.orders.find(order => order.id == orderId && !order.isDeleted);
 	}
 
 	nextId() {

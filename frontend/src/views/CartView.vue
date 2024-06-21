@@ -114,7 +114,7 @@ export default {
 			const cartItemIds = this.cartItems.map(item => item.id);
 			const totalPrice = this.total;
 			try {
-				await axios.post("http://localhost:3000/rest/orders", { 
+				await axios.post("http://localhost:3000/rest/orders", {
 					totalPrice,
 					cartItemIds
 				}, { withCredentials: true });

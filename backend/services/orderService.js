@@ -5,7 +5,7 @@ const CustomerService = require("./customerService");
 class OrderService {
 	constructor() {
 		this.orderDAO = new OrderDAO();
-        this.customerService = new CustomerService();
+		this.customerService = new CustomerService();
 	}
 
 	getAllOrders() {
@@ -14,14 +14,14 @@ class OrderService {
 
 	createOrder(totalPrice, cartItemIds, userId) {
 		const newOrder = new Order(
+			userId,
 			totalPrice,
 			cartItemIds,
 			new Date().toISOString(),
-			"Obrada",
-			userId
+			"Obrada"
 		);
-        
-        const createdOrder = this.orderDAO.save(newOrder);
+
+		const createdOrder = this.orderDAO.save(newOrder);
 
 		const points = (totalPrice / 1000) * 133;
 		this.customerService.addPoints(userId, points);
