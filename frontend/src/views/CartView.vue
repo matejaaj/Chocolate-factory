@@ -15,20 +15,20 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="item in cartItems" :key="item.chocolate.id">
-					<td>{{ item.chocolate.name }}</td>
-					<td>{{ item.chocolate.weight }}</td>
-					<td>{{ item.chocolate.type }}</td>
-					<td>{{ item.chocolate.category }}</td>
-					<td>{{ item.chocolate.price }}</td>
+				<tr v-for="item in cartItems" :key="item.chocolateId">
+					<td>{{ getChocolateById(item.chocolateId).name }}</td>
+					<td>{{ getChocolateById(item.chocolateId).weight }}</td>
+					<td>{{ getChocolateById(item.chocolateId).type }}</td>
+					<td>{{ getChocolateById(item.chocolateId).category }}</td>
+					<td>{{ getChocolateById(item.chocolateId).price }}</td>
 					<td>
-						<img :src="getChocolateImage(item.chocolate.image)" alt="Chocolate Image" />
+						<img :src="getChocolateImage(getChocolateById(item.chocolateId).image)" alt="Chocolate Image" />
 					</td>
 					<td>
-						<input type="number" v-model.number="item.quantity" :max="item.chocolate.quantity + item.quantity" min="1" @change="updateQuantity(item)" />
+						<input type="number" v-model.number="item.quantity" :max="getChocolateById(item.chocolateId).quantity + item.quantity" min="1" @change="updateQuantity(item)" />
 					</td>
 					<td>
-						<button @click="removeFromCart(item.chocolate.id)">Remove from Cart</button>
+						<button @click="removeFromCart(item.chocolateId)">Remove from Cart</button>
 					</td>
 				</tr>
 			</tbody>
@@ -50,29 +50,47 @@ export default {
 	data() {
 		return {
 			cartItems: [],
+			chocolates: [],
 			total: 0,
 		};
 	},
 	created() {
 		this.fetchCart();
+		this.fetchChocolates();
+	},
+	watch: {
+		cartItems: 'calculateTotal',
+		chocolates: 'calculateTotal'
 	},
 	methods: {
 		async fetchCart() {
 			try {
-				const response = await axios.get("http://localhost:3000/cart", {
+				const response = await axios.get("http://localhost:3000/rest/cart", {
 					withCredentials: true,
 				});
 				this.cartItems = response.data;
-				this.calculateTotal();
 			} catch (error) {
 				console.error("Error fetching cart items:", error);
 			}
 		},
+		async fetchChocolates() {
+			try {
+				const response = await axios.get("http://localhost:3000/rest/chocolates", {
+					withCredentials: true,
+				});
+				this.chocolates = response.data;
+			} catch (error) {
+				console.error("Error fetching chocolates:", error);
+			}
+		},
+		getChocolateById(chocolateId) {
+			return this.chocolates.find(chocolate => chocolate.id == chocolateId) || {};
+		},
 		async updateQuantity(item) {
 			try {
 				await axios.put(
-					`http://localhost:3000/cart/update`,
-					{ chocolateId: item.chocolate.id, quantity: item.quantity },
+					`http://localhost:3000/rest/cart/update`,
+					{ chocolateId: item.chocolateId, quantity: item.quantity },
 					{ withCredentials: true }
 				);
 				this.calculateTotal();
@@ -82,17 +100,19 @@ export default {
 		},
 		async removeFromCart(chocolateId) {
 			try {
-				await axios.delete(`http://localhost:3000/cart/remove/${chocolateId}`, {
+				await axios.delete(`http://localhost:3000/rest/cart/remove/${chocolateId}`, {
 					withCredentials: true,
 				});
-				this.cartItems = this.cartItems.filter((item) => item.chocolate.id !== chocolateId);
+				this.cartItems = this.cartItems.filter((item) => item.chocolateId != chocolateId);
 				this.calculateTotal();
 			} catch (error) {
 				console.error("Error removing item from cart:", error);
 			}
 		},
 		calculateTotal() {
-			this.total = this.cartItems.reduce((acc, item) => acc + item.chocolate.price * item.quantity, 0);
+			if (this.cartItems.length && this.chocolates.length) {
+				this.total = this.cartItems.reduce((acc, item) => acc + this.getChocolateById(item.chocolateId).price * item.quantity, 0);
+			}
 		},
 		getChocolateImage(imagePath) {
 			try {

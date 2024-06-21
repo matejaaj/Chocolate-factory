@@ -166,7 +166,7 @@ export default {
 			}
 			try {
 				const response = await axios.post(
-					"http://localhost:3000/cart/add",
+					"http://localhost:3000/rest/cart/add",
 					{ chocolateId: chocolate.id, quantity, factoryId: this.factoryId },
 					{ withCredentials: true }
 				);

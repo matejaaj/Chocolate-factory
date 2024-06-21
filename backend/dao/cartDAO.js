@@ -11,12 +11,13 @@ class CartDAO {
 
 	getAll() {
 		this.cartItems = this.serializer.fromCSV(this.filePath, Cart);
-		return this.cartItems;
+		return this.cartItems.filter((item) => !item.isDeleted);
 	}
 
 	getByUserId(userId) {
 		this.cartItems = this.serializer.fromCSV(this.filePath, Cart);
-		return this.cartItems.filter((item) => item.userId === userId);
+		const userCartItems = this.cartItems.filter((item) => item.userId == userId && !item.isDeleted);
+		return userCartItems;
 	}
 
 	save(cartItem) {
@@ -37,7 +38,7 @@ class CartDAO {
 
 	update(cartItem) {
 		this.cartItems = this.serializer.fromCSV(this.filePath, Cart);
-		const index = this.cartItems.findIndex((item) => item.id === cartItem.id);
+		const index = this.cartItems.findIndex((item) => item.id == cartItem.id);
 		if (index !== -1) {
 			this.cartItems[index] = cartItem;
 			this.serializer.toCSV(this.filePath, this.cartItems);
@@ -47,15 +48,20 @@ class CartDAO {
 
 	deleteByUserIdAndChocolateId(userId, chocolateId) {
 		this.cartItems = this.serializer.fromCSV(this.filePath, Cart);
-		this.cartItems = this.cartItems.filter(
-			(item) => !(item.userId === userId && item.chocolateId === chocolateId)
-		);
-		this.serializer.toCSV(this.filePath, this.cartItems);
+		const index = this.cartItems.findIndex((item) => item.userId == userId && item.chocolateId == chocolateId);
+		if (index !== -1) {
+			this.cartItems[index].isDeleted = true;
+			this.serializer.toCSV(this.filePath, this.cartItems);
+		}
 	}
 
 	clearByUserId(userId) {
 		this.cartItems = this.serializer.fromCSV(this.filePath, Cart);
-		this.cartItems = this.cartItems.filter((item) => item.userId !== userId);
+		this.cartItems.forEach((item) => {
+			if (item.userId == userId) {
+				item.isDeleted = true;
+			}
+		});
 		this.serializer.toCSV(this.filePath, this.cartItems);
 	}
 }

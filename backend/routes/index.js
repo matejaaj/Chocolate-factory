@@ -18,6 +18,6 @@ router.use("/rest/locations", locationRoutes);
 router.use("/rest/managers", managerRoutes);
 router.use("/auth", authRoutes);
 router.use("/rest/users", userRoutes);
-router.use("/cart", cartRoutes);
+router.use("/rest/cart", cartRoutes);
 
 module.exports = router;

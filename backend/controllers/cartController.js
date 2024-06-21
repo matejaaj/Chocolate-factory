@@ -6,20 +6,21 @@ class CartController {
 	}
 
 	getCart(req, res) {
-		const cartItems = this.cartService.getCart(req.user.id);
+		const cartItems = this.cartService.getCart(req.userId); // Koristi req.userId
 		res.json(cartItems);
 	}
 
 	addToCart(req, res) {
 		const { chocolateId, quantity, factoryId } = req.body;
-		this.cartService.addToCart(req.user.id, chocolateId, quantity, factoryId);
+		console.log("req.userId:", req.userId); // Dodaj ovaj ispis za proveru
+		this.cartService.addToCart(req.userId, chocolateId, quantity, factoryId); // Koristi req.userId
 		res.status(201).json({ message: "Item added to cart" });
 	}
 
 	updateCartItem(req, res) {
 		const { chocolateId, quantity } = req.body;
 		const updatedItem = this.cartService.updateCartItem(
-			req.user.id,
+			req.userId, // Koristi req.userId
 			chocolateId,
 			quantity
 		);
@@ -32,12 +33,12 @@ class CartController {
 
 	removeCartItem(req, res) {
 		const { chocolateId } = req.params;
-		this.cartService.removeCartItem(req.user.id, chocolateId);
+		this.cartService.removeCartItem(req.userId, chocolateId); // Koristi req.userId
 		res.status(204).send();
 	}
 
 	clearCart(req, res) {
-		this.cartService.clearCart(req.user.id);
+		this.cartService.clearCart(req.userId); // Koristi req.userId
 		res.status(204).send();
 	}
 }
