@@ -5,9 +5,22 @@ class UserController {
 		this.userService = new UserService();
 	}
 
-	getAllUsers(req, res) {
+	async getAllUsers(req, res) {
 		try {
-			const users = this.userService.getAllUsers();
+			const search = {
+				firstName: req.query.firstName || "",
+				lastName: req.query.lastName || "",
+				username: req.query.username || "",
+			};
+			const filter = {
+				role: req.query.role || "",
+				type: req.query.type || "",
+			};
+			const sort = {
+				field: req.query.sortField || "firstName",
+				order: req.query.sortOrder || "asc",
+			};
+			const users = this.userService.getAllUsers(search, filter, sort);
 			res.json(users);
 		} catch (error) {
 			res.status(500).json({ message: error.message });
