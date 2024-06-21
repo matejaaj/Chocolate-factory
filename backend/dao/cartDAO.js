@@ -16,7 +16,7 @@ class CartDAO {
 
 	getByUserId(userId) {
 		this.cartItems = this.serializer.fromCSV(this.filePath, Cart);
-		const userCartItems = this.cartItems.filter((item) => item.userId == userId && !item.isDeleted);
+		const userCartItems = this.cartItems.filter((item) => item.userId == userId && !item.isDeleted && !item.isOrdered);
 		return userCartItems;
 	}
 
@@ -53,6 +53,16 @@ class CartDAO {
 			this.cartItems[index].isDeleted = true;
 			this.serializer.toCSV(this.filePath, this.cartItems);
 		}
+	}
+
+	markAsOrdered(cartItemIds) {
+		this.cartItems = this.serializer.fromCSV(this.filePath, Cart);
+		this.cartItems.forEach(item => {
+			if (cartItemIds.includes(item.id)) {
+				item.isOrdered = true;
+			}
+		});
+		this.serializer.toCSV(this.filePath, this.cartItems);
 	}
 
 	clearByUserId(userId) {

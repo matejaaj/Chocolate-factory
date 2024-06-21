@@ -1,11 +1,13 @@
 const OrderDAO = require("../dao/orderDAO");
 const Order = require("../model/order");
 const CustomerService = require("./customerService");
+const CartService = require("./cartService");
 
 class OrderService {
 	constructor() {
 		this.orderDAO = new OrderDAO();
 		this.customerService = new CustomerService();
+		this.cartService = new CartService();
 	}
 
 	getAllOrders() {
@@ -25,6 +27,7 @@ class OrderService {
 
 		const points = (totalPrice / 1000) * 133;
 		this.customerService.addPoints(userId, points);
+		this.cartService.markItemsAsOrdered(cartItemIds);
 
 		return createdOrder;
 	}
@@ -50,7 +53,13 @@ class OrderService {
 	cancelOrder(id) {
 		const existingOrder = this.orderDAO.getById(id);
 		if (existingOrder && existingOrder.status === "Obrada") {
-			this.orderDAO.delete(existingOrder);
+			existingOrder.status = "Otkazano";
+			this.orderDAO.update(existingOrder);
+
+			const totalPrice = existingOrder.totalPrice;
+			const points = - (totalPrice / 1000) * 133 * 4;
+			this.customerService.addPoints(existingOrder.userId, points);	
+
 			return true;
 		}
 		return false;

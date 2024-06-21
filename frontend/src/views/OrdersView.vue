@@ -19,6 +19,7 @@
 					<td>{{ order.status }}</td>
 					<td>
 						<button @click="viewOrderDetails(order.id)">View Details</button>
+						<button v-if="order.status === 'Obrada'" @click="cancelOrder(order.id)">Cancel Order</button>
 					</td>
 				</tr>
 			</tbody>
@@ -63,6 +64,18 @@ export default {
 		viewOrderDetails(orderId) {
 			this.$router.push(`/order-details/${orderId}`);
 		},
+		async cancelOrder(orderId) {
+			try {
+				await axios.put(`http://localhost:3000/rest/orders/cancel/${orderId}`, {}, {
+					withCredentials: true,
+				});
+				this.fetchOrders();
+				alert("Order cancelled successfully");
+			} catch (error) {
+				console.error("Error cancelling order:", error);
+				alert("Error cancelling order");
+			}
+		}
 	},
 };
 </script>

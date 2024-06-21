@@ -8,8 +8,9 @@ const orderController = new OrderController();
 router.get("/", authenticateToken, (req, res) => orderController.getAllOrders(req, res));
 router.get("/:id", authenticateToken, (req, res) => orderController.getOrderById(req, res));
 router.get("/user/:userId", authenticateToken, (req, res) => orderController.getOrdersByUserId(req, res));
-router.post("/", authenticateToken, (req, res) => orderController.createOrder(req, res)); // Ova ruta je važna
+router.post("/", authenticateToken, (req, res) => orderController.createOrder(req, res)); 
 router.put("/:id", authenticateToken, (req, res) => orderController.updateOrder(req, res));
 router.delete("/:id", authenticateToken, (req, res) => orderController.deleteOrder(req, res));
+router.put("/cancel/:id", authenticateToken, (req, res) => orderController.cancelOrder(req, res));
 
 module.exports = router;
