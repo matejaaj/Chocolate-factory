@@ -11,11 +11,21 @@ class AuthService {
 	login(username, password) {
 		const user = this.userService.findUserByUsername(username);
 		if (user && user.password === password) {
+			console.log("USER BLOCKED STATUS: " + user.isBlocked);
+			if (user.isBlocked) {
+				return { error: "User is blocked" };
+			}
 			const token = jwt.sign(
-				{ id: user.id, username: user.username, role: user.role },
+				{
+					id: user.id,
+					username: user.username,
+					role: user.role,
+					isBlocked: user.isBlocked,
+				},
 				"your_secret_key",
 				{ expiresIn: "1h" } // Token expires in 1 hour
 			);
+
 			return {
 				token,
 				user: { id: user.id, username: user.username, role: user.role },

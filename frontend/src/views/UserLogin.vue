@@ -67,8 +67,17 @@ export default {
 					redirectToRoleBasedPage(response.data.role); // Call the redirection method
 				}, 1000);
 			} catch (error) {
-				if (error.response && error.response.status === 401) {
-					errorMessage.value = "Invalid username or password";
+				if (error.response) {
+					if (error.response.status === 401) {
+						errorMessage.value = "Invalid username or password";
+					} else if (
+						error.response.status === 403 &&
+						error.response.data.message === "User is blocked"
+					) {
+						errorMessage.value = "User is blocked";
+					} else {
+						errorMessage.value = "An error occurred. Please try again later.";
+					}
 				} else {
 					errorMessage.value = "An error occurred. Please try again later.";
 				}
