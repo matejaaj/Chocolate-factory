@@ -11,6 +11,7 @@ import ViewUsers from "@/components/ViewUsers.vue";
 import Cart from "@/views/CartView.vue"; 
 import auth from "@/services/auth";
 import UserRegister from "@/views/UserRegister.vue";
+import OrdersView from "@/views/OrdersView.vue";
 
 const routes = [
 	{ path: "/home", component: HomePage },
@@ -57,6 +58,11 @@ const routes = [
 	{
 		path: "/cart",
 		component: Cart,
+		meta: { requiresAuth: true, role: "CUSTOMER" },
+	},
+	{
+		path: "/orders",
+		component: OrdersView,
 		meta: { requiresAuth: true, role: "CUSTOMER" },
 	},
 ];

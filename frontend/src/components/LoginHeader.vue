@@ -4,6 +4,10 @@
 			<h1>Chocolate Factory</h1>
 		</div>
 		<div class="auth">
+			<span v-if="isAuthenticated && isCustomer" @click="navigateToOrders" class="orders">
+				<img src="@/assets/orders.png" alt="Orders" />
+				Orders
+			</span>
 			<span v-if="isAuthenticated && isCustomer" @click="navigateToCart" class="cart">
 				<img src="@/assets/cart.png" alt="Cart" />
 				Cart
@@ -51,6 +55,10 @@ export default {
 			router.push("/cart");
 		};
 
+		const navigateToOrders = () => {
+			router.push("/orders");
+		};
+
 		const checkIfCustomer = async () => {
 			try {
 				const response = await axios.get("http://localhost:3000/auth/role", {
@@ -85,6 +93,7 @@ export default {
 			isCustomer,
 			handleAuth,
 			navigateToCart,
+			navigateToOrders,
 		};
 	},
 };
@@ -115,7 +124,8 @@ export default {
 	margin-left: 10px;
 }
 
-.auth .cart img {
+.auth .cart img,
+.auth .orders img {
 	width: 24px;
 	height: 24px;
 	margin-right: 5px;

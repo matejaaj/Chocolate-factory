@@ -39,6 +39,9 @@
 		<div>
 			<h3>Total: {{ total }}</h3>
 		</div>
+		<div v-if="cartItems.length">
+			<button @click="createOrder">Buy</button>
+		</div>
 	</div>
 </template>
 
@@ -58,10 +61,6 @@ export default {
 		this.fetchCart();
 		this.fetchChocolates();
 	},
-	watch: {
-		cartItems: 'calculateTotal',
-		chocolates: 'calculateTotal'
-	},
 	methods: {
 		async fetchCart() {
 			try {
@@ -69,6 +68,7 @@ export default {
 					withCredentials: true,
 				});
 				this.cartItems = response.data;
+				this.calculateTotal();
 			} catch (error) {
 				console.error("Error fetching cart items:", error);
 			}
@@ -79,6 +79,7 @@ export default {
 					withCredentials: true,
 				});
 				this.chocolates = response.data;
+				this.calculateTotal();
 			} catch (error) {
 				console.error("Error fetching chocolates:", error);
 			}
@@ -107,6 +108,21 @@ export default {
 				this.calculateTotal();
 			} catch (error) {
 				console.error("Error removing item from cart:", error);
+			}
+		},
+		async createOrder() {
+			const cartItemIds = this.cartItems.map(item => item.id);
+			const totalPrice = this.total;
+			try {
+				await axios.post("http://localhost:3000/rest/orders", { 
+					totalPrice,
+					cartItemIds
+				}, { withCredentials: true });
+				alert("Order created successfully!");
+				this.cartItems = [];
+				this.total = 0;
+			} catch (error) {
+				console.error("Error creating order:", error);
 			}
 		},
 		calculateTotal() {

@@ -40,6 +40,16 @@ class CustomerService {
 		}
 		return false;
 	}
+
+	addPoints(customerId, points) {
+		const customer = this.customerDAO.getById(customerId);
+		if (customer) {
+			customer.points += points;
+			this.customerDAO.update(customer);
+			return customer;
+		}
+		return null;
+	}
 }
 
 module.exports = CustomerService;
