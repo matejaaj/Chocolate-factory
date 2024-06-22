@@ -7,8 +7,9 @@
 		<p><strong>Rating:</strong> {{ factory.rating }}</p>
 		<img :src="getFactoryLogo(factory.logo)" alt="Factory Logo" />
 		<chocolate-list :factoryId="factory.id" />
-		<div v-if="isManager">
-			<button @click="viewFactoryOrders">View Orders</button>
+		<div>
+			<button v-if="isManager" @click="viewFactoryOrders">View Orders</button>
+			<button @click="viewFactoryComments">Show Comments</button>
 		</div>
 	</div>
 	<div v-else>
@@ -91,6 +92,9 @@ export default {
 		viewFactoryOrders() {
 			this.$router.push(`/manager-orders/${this.factory.id}`);
 		},
+		viewFactoryComments() {
+			this.$router.push(`/factory-comments/${this.factory.id}`);
+		}
 	},
 };
 </script>
@@ -99,5 +103,9 @@ export default {
 img {
 	max-width: 200px;
 	height: auto;
+}
+button {
+	padding: 5px 10px;
+	cursor: pointer;
 }
 </style>

@@ -10,5 +10,8 @@ router.get("/factory/:factoryId", authenticateToken, (req, res) => reviewControl
 router.post("/", authenticateToken, (req, res) => reviewController.createReview(req, res));
 router.put("/:id", authenticateToken, (req, res) => reviewController.updateReviewStatus(req, res));
 router.delete("/:id", authenticateToken, (req, res) => reviewController.deleteReview(req, res));
+router.put("/approve/:id", authenticateToken, (req, res) => reviewController.approveReview(req, res));
+router.put("/reject/:id", authenticateToken, (req, res) => reviewController.rejectReview(req, res));
+
 
 module.exports = router;

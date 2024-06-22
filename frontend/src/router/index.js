@@ -15,6 +15,7 @@ import OrdersView from "@/views/OrdersView.vue";
 import OrderDetailsView from "@/views/OrderDetailsView.vue"; 
 import ManagerOrderView from "@/views/ManagerOrderView.vue";
 import CreateReviewView from "@/views/CreateReview.vue";
+import FactoryCommentsView from '@/views/FactoryCommentsView.vue';
 
 const routes = [
 	{ path: "/home", component: HomePage },
@@ -82,7 +83,12 @@ const routes = [
 		path: "/create-review/:id",
 		name: 'CreateReviewView',
 		component: CreateReviewView,
-	}
+	},
+	{
+		path: '/factory-comments/:id',
+		name: 'FactoryCommentsView',
+		component: FactoryCommentsView
+	},
 ];
 
 const router = createRouter({
