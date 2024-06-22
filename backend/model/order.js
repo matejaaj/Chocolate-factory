@@ -1,12 +1,13 @@
 class Order {
-	constructor(userId, totalPrice, cartItemIds, date, status, factoryId) {
+	constructor(userId, totalPrice, chocolateIds, date, status, factoryId) {
 		this.id = null;
 		this.userId = userId;
 		this.totalPrice = totalPrice;
-		this.cartItemIds = Array.isArray(cartItemIds) ? cartItemIds : [];
+		this.chocolateIds = Array.isArray(chocolateIds) ? chocolateIds : [];
 		this.date = this.formatDate(date);
 		this.status = status;
 		this.factoryId = factoryId;
+		this.isReviewed = false;
 		this.isDeleted = false;
 	}
 
@@ -23,10 +24,11 @@ class Order {
 			this.id,
 			this.userId,
 			this.totalPrice,
-			this.cartItemIds.join(','), // Ensure it's a list before joining
+			this.chocolateIds.join(','), // Ensure it's a list before joining
 			this.date,
 			this.status,
 			this.factoryId,
+			this.isReviewed ? "true" : "false",
 			this.isDeleted ? "true" : "false",
 		];
 	}
@@ -36,17 +38,19 @@ class Order {
 			this.id,
 			this.userId,
 			this.totalPrice,
-			this.cartItemIds,
+			this.chocolateIds,
 			this.date,
 			this.status,
 			this.factoryId,
+			this.isReviewed,
 			this.isDeleted
 		] = values;
 		this.id = parseInt(this.id);
 		this.userId = parseInt(this.userId);
 		this.totalPrice = parseFloat(this.totalPrice);
-		this.cartItemIds = this.cartItemIds.split(',').map(id => parseInt(id));
+		this.chocolateIds = this.chocolateIds.split(',').map(id => parseInt(id));
 		this.date = this.formatDate(this.date);
+		this.isReviewed = this.isReviewed === "true";
 		this.isDeleted = this.isDeleted === "true";
 	}
 }

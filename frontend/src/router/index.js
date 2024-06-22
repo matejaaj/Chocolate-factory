@@ -14,6 +14,7 @@ import UserRegister from "@/views/UserRegister.vue";
 import OrdersView from "@/views/OrdersView.vue";
 import OrderDetailsView from "@/views/OrderDetailsView.vue"; 
 import ManagerOrderView from "@/views/ManagerOrderView.vue";
+import CreateReviewView from "@/views/CreateReview.vue";
 
 const routes = [
 	{ path: "/home", component: HomePage },
@@ -77,6 +78,11 @@ const routes = [
 		name: 'ManagerOrderView',
 		component: ManagerOrderView
 	},
+	{
+		path: "/create-review/:id",
+		name: 'CreateReviewView',
+		component: CreateReviewView,
+	}
 ];
 
 const router = createRouter({
