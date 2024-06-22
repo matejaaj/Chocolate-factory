@@ -13,6 +13,12 @@ class OrderController {
 		res.json(orders);
 	}
 
+	getOrdersByFactoryId(req, res) {
+		const factoryId = parseInt(req.params.factoryId, 10);
+		const orders = this.orderService.getOrdersByFactoryId(factoryId);
+		res.json(orders);
+	}
+
 	createOrder(req, res) {
 		const userId = req.userId;
 		const createdOrders = this.orderService.createOrder(userId);
@@ -48,6 +54,27 @@ class OrderController {
 			res.status(204).send();
 		} else {
 			res.status(404).json({ message: "Order not found or cannot be canceled" });
+		}
+	}
+
+	acceptOrder(req, res) {
+		const id = req.params.id;
+		const result = this.orderService.acceptOrder(id);
+		if (result) {
+			res.status(200).send("Order accepted");
+		} else {
+			res.status(404).send("Order not found or already processed");
+		}
+	}
+
+	declineOrder(req, res) {
+		const id = req.params.id;
+		const reason = req.body.reason;
+		const result = this.orderService.declineOrder(id, reason);
+		if (result) {
+			res.status(200).send("Order declined");
+		} else {
+			res.status(404).send("Order not found or already processed");
 		}
 	}
 }

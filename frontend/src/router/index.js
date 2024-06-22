@@ -13,6 +13,7 @@ import auth from "@/services/auth";
 import UserRegister from "@/views/UserRegister.vue";
 import OrdersView from "@/views/OrdersView.vue";
 import OrderDetailsView from "@/views/OrderDetailsView.vue"; 
+import ManagerOrderView from "@/views/ManagerOrderView.vue";
 
 const routes = [
 	{ path: "/home", component: HomePage },
@@ -70,7 +71,11 @@ const routes = [
 		path: "/order-details/:id",
 		component: OrderDetailsView,
 		props: true,
-		meta: { requiresAuth: true, role: "CUSTOMER" },
+	},
+	{
+		path: '/manager-orders/:id',
+		name: 'ManagerOrderView',
+		component: ManagerOrderView
 	},
 ];
 

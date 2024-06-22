@@ -7,6 +7,9 @@
 		<p><strong>Rating:</strong> {{ factory.rating }}</p>
 		<img :src="getFactoryLogo(factory.logo)" alt="Factory Logo" />
 		<chocolate-list :factoryId="factory.id" />
+		<div v-if="isManager">
+			<button @click="viewFactoryOrders">View Orders</button>
+		</div>
 	</div>
 	<div v-else>
 		<p>Loading factory details...</p>
@@ -26,11 +29,13 @@ export default {
 		return {
 			factory: null,
 			locations: [],
+			isManager: false,
 		};
 	},
 	created() {
 		this.fetchFactoryDetails();
 		this.fetchLocations();
+		this.checkIfManager();
 	},
 	methods: {
 		async fetchFactoryDetails() {
@@ -56,6 +61,19 @@ export default {
 				console.error("Error fetching locations:", error);
 			}
 		},
+		async checkIfManager() {
+			try {
+				const response = await axios.get(
+					`http://localhost:3000/rest/factories/isManager/${this.$route.params.id}`,
+					{
+						withCredentials: true,
+					}
+				);
+				this.isManager = response.data.isManager;
+			} catch (error) {
+				console.error("Error checking manager status:", error);
+			}
+		},
 		getLocation(locationId) {
 			const location = this.locations.find((loc) => loc.id == locationId);
 			return location
@@ -69,6 +87,9 @@ export default {
 				console.error(`Image not found: ${logoPath}`);
 				return "";
 			}
+		},
+		viewFactoryOrders() {
+			this.$router.push(`/manager-orders/${this.factory.id}`);
 		},
 	},
 };

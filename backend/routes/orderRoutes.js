@@ -12,5 +12,9 @@ router.post("/", authenticateToken, (req, res) => orderController.createOrder(re
 router.put("/:id", authenticateToken, (req, res) => orderController.updateOrder(req, res));
 router.delete("/:id", authenticateToken, (req, res) => orderController.deleteOrder(req, res));
 router.put("/cancel/:id", authenticateToken, (req, res) => orderController.cancelOrder(req, res));
+router.get("/factory/:factoryId", authenticateToken, (req, res) => orderController.getOrdersByFactoryId(req, res));
+router.put("/accept/:id", authenticateToken, (req, res) => orderController.acceptOrder(req, res));
+router.put("/decline/:id", authenticateToken, (req, res) => orderController.declineOrder(req, res));
+
 
 module.exports = router;

@@ -116,6 +116,42 @@ class OrderService {
 		return false;
 	}
 
+	acceptOrder(id) {
+		const existingOrder = this.orderDAO.getById(id);
+		if (existingOrder && existingOrder.status === "Obrada") {
+			existingOrder.status = "Odobreno";
+			this.orderDAO.update(existingOrder);
+			return true;
+		}
+		return false;
+	}
+
+	declineOrder(id, reason) {
+		const existingOrder = this.orderDAO.getById(id);
+		if (existingOrder && existingOrder.status === "Obrada") {
+			existingOrder.status = "Odbijeno";
+			existingOrder.declineReason = reason; // Add reason for decline
+			this.orderDAO.update(existingOrder);
+			return true;
+		}
+		return false;
+	}
+
+	getOrdersByFactoryId(factoryId) {
+		const orders = this.orderDAO.getAll();
+		const factories = this.factoryService.getAllFactories();
+
+		return orders
+			.filter(order => order.factoryId == factoryId)
+			.map(order => {
+				const factory = factories.find(f => f.id == order.factoryId);
+				if (factory) {
+					order.factoryName = factory.name;
+				}
+				return order;
+			});
+	}
+
 	getOrdersByUserId(userId) {
 		return this.orderDAO.getByUserId(userId);
 	}
