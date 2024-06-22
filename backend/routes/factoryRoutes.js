@@ -31,8 +31,8 @@ router.get("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => factoryController.deleteFactory(req, res));
 
-router.get("/isManager/:factoryId", authenticateToken, (req, res) =>
-	factoryController.isUserManager(req, res)
+router.get("/isInFactory/:factoryId", authenticateToken, (req, res) =>
+	factoryController.isUserInFactory(req, res)
 );
 
 module.exports = router;

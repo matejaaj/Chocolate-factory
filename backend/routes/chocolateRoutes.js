@@ -2,6 +2,7 @@ const express = require("express");
 const ChocolateController = require("../controllers/chocolateController");
 const authenticateToken = require("../middleware/autenthicateToken");
 const isUserManagerofFactory = require("../middleware/isUserManagerOfFactory");
+const isEmployeeOfFactory = require("../middleware/isEmployeeOfFactory");
 const router = express.Router();
 
 const chocolateController = new ChocolateController();
@@ -21,6 +22,15 @@ router.put("/:id", authenticateToken, isUserManagerofFactory, (req, res) => {
 router.delete("/:id", authenticateToken, isUserManagerofFactory, (req, res) => {
 	chocolateController.deleteChocolate(req, res);
 });
+
+router.put(
+	"/update-quantity/:id",
+	authenticateToken,
+	isEmployeeOfFactory,
+	(req, res) => {
+		chocolateController.updateChocolateQuantity(req, res);
+	}
+);
 
 router.get("/", (req, res) => {
 	if (req.query.factoryId) {

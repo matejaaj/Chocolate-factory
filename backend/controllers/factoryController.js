@@ -1,5 +1,6 @@
 const FactoryService = require("../services/factoryService");
 const ManagerService = require("../services/managerService");
+const EmployeService = require("../services/employeeService");
 const FactoryCreationService = require("../services/factoryCreationService");
 const CreateFactoryDTO = require("../dto/CreateFactoryDTO");
 
@@ -7,6 +8,7 @@ class FactoryController {
 	constructor() {
 		this.factoryService = new FactoryService();
 		this.managerService = new ManagerService();
+		this.employeeService = new EmployeService();
 		this.factoryCreationService = new FactoryCreationService();
 	}
 
@@ -15,23 +17,39 @@ class FactoryController {
 		res.json(factories);
 	}
 
-	async isUserManager(req, res) {
+	async isUserInFactory(req, res) {
 		if (!req.userId) {
 			return res.status(403).json({ message: "Unauthorized access" });
 		}
 
-		const factoryId = parseInt(req.params.factoryId, 10);
-		console.log("userid", req.userId);
-		console.log("role", req.role);
+		let isManager = false;
+		let isEmployee = false;
+		// let isCustomer = false;
+
+		const factoryId = parseInt(req.params.factoryId);
+		console.log("User id:", req.userId);
+		console.log("Role: ", req.role);
 
 		if (req.role === "MANAGER") {
 			const manager = await this.managerService.getManagerById(req.userId);
 			if (manager && manager.factoryId === factoryId) {
-				return res.json({ isManager: true });
+				isManager = true;
 			}
 		}
 
-		return res.json({ isManager: false });
+		if (req.role === "EMPLOYEE") {
+			const employee = await this.employeeService.getEmployeeById(req.userId);
+			if (employee && employee.factoryId === factoryId) {
+				isEmployee = true;
+			}
+		}
+
+		// if (req.role === "CUSTOMER") {
+		// 	isCustomer = true;
+		// }
+
+		return res.json({ isManager: isManager, isEmployee: isEmployee });
+		//return res.json({ isManager: isManager, isEmployee: isEmployee, isCustomer: isCustomer });
 	}
 
 	async getFactoryById(req, res) {

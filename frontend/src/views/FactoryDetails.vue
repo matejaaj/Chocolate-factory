@@ -12,7 +12,6 @@
 			<button @click="viewFactoryComments">Show Comments</button>
 			<button @click="viewRegisterEmployee">Register employee</button>
 		</div>
-		<chocolate-list :factoryId="factory.id" />
 	</div>
 	<div v-else>
 		<p>Loading factory details...</p>

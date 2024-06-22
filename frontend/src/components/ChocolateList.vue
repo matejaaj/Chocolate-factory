@@ -34,7 +34,13 @@
 						/>
 					</td>
 					<td>{{ chocolate.status }}</td>
-					<td>{{ chocolate.quantity }}</td>
+					<td v-if="isEmployee">
+						<input type="number" v-model.number="chocolate.quantity" min="0" />
+						<button @click="updateQuantity(chocolate.id, chocolate.quantity)">
+							Update
+						</button>
+					</td>
+					<td v-else>{{ chocolate.quantity }}</td>
 					<td>
 						<div v-if="isManager">
 							<button @click="editChocolate(chocolate.id)">Edit</button>
@@ -51,6 +57,7 @@
 								Add to Cart
 							</button>
 						</div>
+						<div v-if="isEmployee"></div>
 					</td>
 				</tr>
 			</tbody>
@@ -77,6 +84,7 @@ export default {
 			chocolates: [],
 			isManager: false,
 			isCustomer: false,
+			isEmployee: false,
 			quantities: {},
 		};
 	},
@@ -90,7 +98,7 @@ export default {
 	},
 	created() {
 		this.fetchChocolates();
-		this.checkIfManager();
+		this.checkIfInFactory();
 		this.checkIfCustomer();
 	},
 	methods: {
@@ -107,15 +115,16 @@ export default {
 				console.error("Error fetching chocolates:", error);
 			}
 		},
-		async checkIfManager() {
+		async checkIfInFactory() {
 			try {
 				const response = await axios.get(
-					`http://localhost:3000/rest/factories/isManager/${this.factoryId}`,
+					`http://localhost:3000/rest/factories/isInFactory/${this.factoryId}`,
 					{
 						withCredentials: true,
 					}
 				);
 				this.isManager = response.data.isManager;
+				this.isEmployee = response.data.isEmployee;
 			} catch (error) {
 				console.error("Error checking manager status:", error);
 			}
@@ -149,6 +158,21 @@ export default {
 				console.error("Error deleting chocolate:", error);
 			}
 		},
+		async updateQuantity(chocolateId, quantity) {
+			try {
+				await axios.put(
+					`http://localhost:3000/rest/chocolates/update-quantity/${chocolateId}`,
+					{ chocolateId, quantity, factoryId: this.factoryId },
+					{
+						withCredentials: true,
+					}
+				);
+				alert("Quantity updated successfully");
+			} catch (error) {
+				console.error("Error updating quantity:", error);
+			}
+		},
+
 		editChocolate(chocolateId) {
 			this.$router.push(`/edit-chocolate/${chocolateId}`);
 		},
