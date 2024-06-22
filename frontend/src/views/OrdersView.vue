@@ -71,6 +71,7 @@
 					<td>
 						<button @click="viewOrderDetails(order.id)">View Details</button>
 						<button v-if="order.status === 'Obrada'" @click="cancelOrder(order.id)" class="decline-button">Cancel Order</button>
+						<button v-if="order.status === 'Odobreno' && !order.isReviewed" @click="createReview(order.id)">Review</button>
 					</td>
 				</tr>
 			</tbody>
@@ -159,6 +160,9 @@ export default {
 				console.error('Error cancelling order:', error);
 				alert('Error cancelling order');
 			}
+		},
+		createReview(orderId) {
+			this.$router.push(`/create-review/${orderId}`);
 		}
 	},
 };
@@ -183,6 +187,7 @@ button {
 	padding: 5px 10px;
 	cursor: pointer;
 }
+
 .decline-button {
 	background-color: red;
 	color: white;
