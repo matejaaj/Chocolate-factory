@@ -6,7 +6,10 @@ class OrderController {
 	}
 
 	getAllOrders(req, res) {
-		const orders = this.orderService.getAllOrders();
+		const search = req.query.search ? JSON.parse(req.query.search) : {};
+		const filter = req.query.filter ? JSON.parse(req.query.filter) : {};
+		const sort = req.query.sort ? JSON.parse(req.query.sort) : {};
+		const orders = this.orderService.getAllOrders(search, filter, sort);
 		res.json(orders);
 	}
 

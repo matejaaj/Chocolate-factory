@@ -3,6 +3,7 @@ const Order = require("../model/order");
 const CustomerService = require("./customerService");
 const CartService = require("./cartService");
 const ChocolateService = require("./chocolateService");
+const FactoryService = require("./factoryService");
 
 class OrderService {
 	constructor() {
@@ -10,10 +11,54 @@ class OrderService {
 		this.customerService = new CustomerService();
 		this.cartService = new CartService();
 		this.chocolateService = new ChocolateService();
+		this.factoryService = new FactoryService();
 	}
 
-	getAllOrders() {
-		return this.orderDAO.getAll();
+	getAllOrders(search = {}, filter = {}, sort = {}) {
+		let orders = this.orderDAO.getAll();
+		let factories = this.factoryService.getAllFactories();
+
+		// Merge factory data
+		orders = orders.map((order) => {
+			const factory = factories.find((f) => f.id == order.factoryId);
+			if (factory) {
+				order.factoryName = factory.name;
+			} else {
+				order.factoryName = "Unknown Factory";
+			}
+			return order;
+		});
+
+		// Apply search filters
+		if (search.factoryName) {
+			orders = orders.filter((order) =>
+				order.factoryName.toLowerCase().includes(search.factoryName.toLowerCase())
+			);
+		}
+		if (search.minPrice != undefined && search.maxPrice != undefined) {
+			const minPrice = parseFloat(search.minPrice);
+			const maxPrice = parseFloat(search.maxPrice);
+			orders = orders.filter((order) => order.totalPrice >= minPrice && order.totalPrice <= maxPrice);
+		}
+		if (search.startDate && search.endDate) {
+			const startDate = new Date(search.startDate);
+			const endDate = new Date(search.endDate);
+			orders = orders.filter((order) => {
+				const orderDate = new Date(order.date);
+				return orderDate >= startDate && orderDate <= endDate;
+			});
+		}
+
+		// Apply sorting
+		if (sort && sort.field) {
+			orders.sort((a, b) => {
+				if (a[sort.field] < b[sort.field]) return sort.order === "asc" ? -1 : 1;
+				if (a[sort.field] > b[sort.field]) return sort.order === "asc" ? 1 : -1;
+				return 0;
+			});
+		}
+
+		return orders;
 	}
 
 	createOrder(userId) {

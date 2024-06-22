@@ -1,6 +1,55 @@
 <template>
 	<div>
 		<h2>Orders</h2>
+		<div class="search-container">
+			<div class="search-section">
+				<h3>Search</h3>
+				<div class="search-item">
+					<label for="factoryName">Factory Name:</label>
+					<input id="factoryName" v-model="search.factoryName" type="text" />
+				</div>
+				<div class="search-item">
+					<label for="minPrice">Min Price:</label>
+					<input id="minPrice" v-model="search.minPrice" type="number" />
+				</div>
+				<div class="search-item">
+					<label for="maxPrice">Max Price:</label>
+					<input id="maxPrice" v-model="search.maxPrice" type="number" />
+				</div>
+				<div class="search-item">
+					<label for="startDate">Start Date:</label>
+					<input id="startDate" v-model="search.startDate" type="date" />
+				</div>
+				<div class="search-item">
+					<label for="endDate">End Date:</label>
+					<input id="endDate" v-model="search.endDate" type="date" />
+				</div>
+				<div class="search-item">
+					<button @click="fetchOrders(true, false)">Search</button>
+				</div>
+			</div>
+			<div class="sort-section">
+				<h3>Sort</h3>
+				<div class="search-item">
+					<label for="sortField">Sort by:</label>
+					<select id="sortField" v-model="sort.field">
+						<option value="factoryName">Factory Name</option>
+						<option value="totalPrice">Total Price</option>
+						<option value="date">Date</option>
+					</select>
+				</div>
+				<div class="search-item">
+					<label for="sortOrder">Order:</label>
+					<select id="sortOrder" v-model="sort.order">
+						<option value="asc">Ascending</option>
+						<option value="desc">Descending</option>
+					</select>
+				</div>
+				<div class="search-item">
+					<button @click="fetchOrders(false, true)">Sort</button>
+				</div>
+			</div>
+		</div>
 		<table v-if="orders.length">
 			<thead>
 				<tr>
@@ -40,16 +89,38 @@ export default {
 	data() {
 		return {
 			orders: [],
+			search: {
+				factoryName: '',
+				minPrice: '',
+				maxPrice: '',
+				startDate: '',
+				endDate: ''
+			},
+			sort: {
+				field: 'date',
+				order: 'asc'
+			}
 		};
 	},
 	created() {
-		this.fetchOrders();
+		this.fetchOrders(false, false); // Fetch all orders initially without any search or sort parameters
 	},
 	methods: {
-		async fetchOrders() {
+		async fetchOrders(applySearch, applySort) {
 			try {
+				let params = {};
+
+				if (applySearch) {
+					params.search = JSON.stringify(this.search);
+				}
+
+				if (applySort) {
+					params.sort = JSON.stringify(this.sort);
+				}
+
 				const response = await axios.get('http://localhost:3000/rest/orders', {
 					withCredentials: true,
+					params
 				});
 
 				const ordersWithFactoryNames = await Promise.all(
@@ -82,7 +153,7 @@ export default {
 				await axios.put(`http://localhost:3000/rest/orders/cancel/${orderId}`, {}, {
 					withCredentials: true,
 				});
-				this.fetchOrders();
+				this.fetchOrders(false, false); // Refresh orders after cancelling
 				alert('Order cancelled successfully');
 			} catch (error) {
 				console.error('Error cancelling order:', error);
@@ -94,6 +165,20 @@ export default {
 </script>
 
 <style>
+.search-container {
+	display: flex;
+	flex-wrap: wrap;
+	margin-bottom: 20px;
+}
+
+.search-section, .sort-section {
+	margin-right: 20px;
+}
+
+.search-item {
+	margin-bottom: 10px;
+}
+
 button {
 	padding: 5px 10px;
 	cursor: pointer;
