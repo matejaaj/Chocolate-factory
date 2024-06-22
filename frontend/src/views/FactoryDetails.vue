@@ -6,8 +6,10 @@
 		<p><strong>Location:</strong> {{ getLocation(factory.locationId) }}</p>
 		<p><strong>Rating:</strong> {{ factory.rating }}</p>
 		<img :src="getFactoryLogo(factory.logo)" alt="Factory Logo" />
-		<div v-if="isManager">
-			<button @click="viewFactoryOrders">View Orders</button>
+		<chocolate-list :factoryId="factory.id" />
+		<div>
+			<button v-if="isManager" @click="viewFactoryOrders">View Orders</button>
+			<button @click="viewFactoryComments">Show Comments</button>
 			<button @click="viewRegisterEmployee">Register employee</button>
 		</div>
 		<chocolate-list :factoryId="factory.id" />
@@ -95,6 +97,9 @@ export default {
 		viewRegisterEmployee() {
 			this.$router.push("/register-employee");
 		},
+		viewFactoryComments() {
+			this.$router.push(`/factory-comments/${this.factory.id}`);
+		},
 	},
 };
 </script>
@@ -103,5 +108,9 @@ export default {
 img {
 	max-width: 200px;
 	height: auto;
+}
+button {
+	padding: 5px 10px;
+	cursor: pointer;
 }
 </style>

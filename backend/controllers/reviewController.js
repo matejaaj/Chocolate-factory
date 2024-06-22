@@ -40,6 +40,18 @@ class ReviewController {
 			res.status(404).send("Review not found");
 		}
 	}
+
+	approveReview(req, res) {
+		const reviewId = req.params.id;
+		const review = this.reviewService.updateReviewStatus(reviewId, "approved");
+		res.json(review);
+	}
+	
+	rejectReview(req, res) {
+		const reviewId = req.params.id;
+		const review = this.reviewService.updateReviewStatus(reviewId, "rejected");
+		res.json(review);
+	}
 }
 
 module.exports = ReviewController;

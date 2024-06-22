@@ -20,7 +20,6 @@ class ReviewService {
 		const newReview = new Review(factoryId, userId, text, grade, "Pending");
 		const savedReview = this.reviewDAO.save(newReview);
 		
-		// Update order to set isReviewed to true
 		const order = this.orderDAO.getById(orderId);
 		if (order) {
 			order.isReviewed = true;
@@ -28,6 +27,14 @@ class ReviewService {
 		}
 
 		return savedReview;
+	}
+
+	updateReviewStatus(id, status) {
+		const review = this.reviewDAO.getById(id);
+		if (review) {
+			review.status = status;
+		
+		}
 	}
 
 	updateReviewStatus(reviewId, status) {
