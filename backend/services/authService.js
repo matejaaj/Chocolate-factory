@@ -1,11 +1,13 @@
 const jwt = require("jsonwebtoken");
 const UserService = require("./userService");
 const CustomerService = require("./customerService");
+const EmployeeService = require("./employeeService");
 
 class AuthService {
 	constructor() {
 		this.userService = new UserService();
 		this.customerService = new CustomerService();
+		this.employeeService = new EmployeeService();
 	}
 
 	login(username, password) {
@@ -72,6 +74,49 @@ class AuthService {
 		return {
 			user: createdUser,
 			customer: newCustomer,
+		};
+	}
+
+	async registerEmployee(userDetails) {
+		this.validateUserDetails(userDetails);
+
+		const {
+			username,
+			password,
+			firstName,
+			lastName,
+			gender,
+			birthDate,
+			factoryId,
+		} = userDetails;
+		const existingUser = await this.userService.findUserByUsername(username);
+
+		if (existingUser) {
+			return null;
+		}
+
+		let role = "EMPLOYEE";
+
+		const newUser = {
+			username,
+			password,
+			firstName,
+			lastName,
+			gender,
+			birthDate,
+			role,
+		};
+
+		const createdUser = await this.userService.createUser(newUser);
+
+		const newEmployee = await this.employeeService.createEmployee({
+			userId: createdUser.id,
+			factoryId: factoryId,
+		});
+
+		return {
+			user: createdUser,
+			employee: newEmployee,
 		};
 	}
 

@@ -88,6 +88,44 @@ class AuthController {
 		}
 	}
 
+	async registerEmployee(req, res) {
+		const {
+			username,
+			password,
+			confirmPassword,
+			firstName,
+			lastName,
+			gender,
+			birthDate,
+		} = req.body;
+
+		if (password !== confirmPassword) {
+			return res.status(400).json({ message: "Passwords do not match" });
+		}
+
+		try {
+			const result = await this.authService.registerEmployee({
+				username,
+				password,
+				firstName,
+				lastName,
+				gender,
+				birthDate,
+				factoryId: req.factoryId,
+			});
+			if (result) {
+				res.status(201).json({ message: "Registration successful" });
+			} else {
+				res
+					.status(400)
+					.json({ message: "Registration failed. User might already exist." });
+			}
+		} catch (err) {
+			console.error("Error during registration:", err); // Log the error
+			res.status(400).json({ message: err.message });
+		}
+	}
+
 	getRole(req, res) {
 		const token = req.cookies.token;
 		if (!token) {

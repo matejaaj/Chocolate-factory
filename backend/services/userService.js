@@ -1,4 +1,5 @@
 const UserDAO = require("../dao/userDAO");
+const User = require("../model/user");
 const CustomerService = require("./customerService");
 const CustomerTypeService = require("./customerTypeService");
 
@@ -71,16 +72,24 @@ class UserService {
 		return users;
 	}
 
-	saveUser(user) {
-		return this.userDAO.save(user);
-	}
+	async createUser(data) {
+		const existingUser = this.userDAO.findByUsername(data.username);
+		if (existingUser) {
+			throw new Error("Username already exists");
+		}
 
-	updateUser(user) {
-		return this.userDAO.update(user);
-	}
+		const newUser = new User(
+			data.username,
+			data.password,
+			data.firstName,
+			data.lastName,
+			data.gender,
+			data.birthDate,
+			data.role
+		);
 
-	deleteUser(user) {
-		this.userDAO.delete(user);
+		const savedUser = this.userDAO.save(newUser);
+		return savedUser;
 	}
 
 	getUserById(userId) {

@@ -8,12 +8,13 @@ import UserLogin from "@/views/UserLogin.vue";
 import AdminPage from "@/views/AdminPage.vue";
 import CreateFactory from "@/components/CreateFactory.vue";
 import ViewUsers from "@/components/ViewUsers.vue";
-import Cart from "@/views/CartView.vue"; 
+import Cart from "@/views/CartView.vue";
 import auth from "@/services/auth";
 import UserRegister from "@/views/UserRegister.vue";
 import OrdersView from "@/views/OrdersView.vue";
-import OrderDetailsView from "@/views/OrderDetailsView.vue"; 
+import OrderDetailsView from "@/views/OrderDetailsView.vue";
 import ManagerOrderView from "@/views/ManagerOrderView.vue";
+import RegisterEmployeeView from "@/views/RegisterEmployeeView.vue";
 
 const routes = [
 	{ path: "/home", component: HomePage },
@@ -73,9 +74,14 @@ const routes = [
 		props: true,
 	},
 	{
-		path: '/manager-orders/:id',
-		name: 'ManagerOrderView',
-		component: ManagerOrderView
+		path: "/manager-orders/:id",
+		name: "ManagerOrderView",
+		component: ManagerOrderView,
+	},
+	{
+		path: "/register-employee",
+		component: RegisterEmployeeView,
+		meta: { requiresAuth: true, role: "MANAGER" },
 	},
 ];
 

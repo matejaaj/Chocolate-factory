@@ -6,10 +6,11 @@
 		<p><strong>Location:</strong> {{ getLocation(factory.locationId) }}</p>
 		<p><strong>Rating:</strong> {{ factory.rating }}</p>
 		<img :src="getFactoryLogo(factory.logo)" alt="Factory Logo" />
-		<chocolate-list :factoryId="factory.id" />
 		<div v-if="isManager">
 			<button @click="viewFactoryOrders">View Orders</button>
+			<button @click="viewRegisterEmployee">Register employee</button>
 		</div>
+		<chocolate-list :factoryId="factory.id" />
 	</div>
 	<div v-else>
 		<p>Loading factory details...</p>
@@ -90,6 +91,9 @@ export default {
 		},
 		viewFactoryOrders() {
 			this.$router.push(`/manager-orders/${this.factory.id}`);
+		},
+		viewRegisterEmployee() {
+			this.$router.push("/register-employee");
 		},
 	},
 };
