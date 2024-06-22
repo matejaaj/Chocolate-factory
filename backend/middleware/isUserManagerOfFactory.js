@@ -7,10 +7,11 @@ const isUserManagerofFactory = async (req, res, next) => {
 		return res.status(403).json({ message: "Unauthorized access" });
 	}
 
-	const factoryId = parseInt(req.params.factoryId, 10);
+	const factoryId = parseInt(req.body.factoryId);
 
 	if (req.role === "MANAGER") {
 		const manager = await managerService.getManagerById(req.userId);
+
 		if (manager && manager.factoryId === factoryId) {
 			req.isManager = true;
 			return next();

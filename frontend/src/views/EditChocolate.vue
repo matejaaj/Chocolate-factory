@@ -105,7 +105,10 @@ export default {
 			try {
 				await axios.put(
 					`http://localhost:3000/rest/chocolates/${this.$route.params.id}`,
-					this.chocolate
+					this.chocolate,
+					{
+						withCredentials: true,
+					}
 				);
 				this.$router.push(`/factories/${this.chocolate.factoryId}`);
 			} catch (error) {

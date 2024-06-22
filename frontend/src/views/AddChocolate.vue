@@ -83,7 +83,11 @@ export default {
 			try {
 				await axios.post(
 					"http://localhost:3000/rest/chocolates",
-					this.chocolate
+					this.chocolate,
+					{
+						data: { factoryId: this.factoryId },
+						withCredentials: true,
+					}
 				);
 				this.$router.push(`/factories/${this.chocolate.factoryId}`);
 			} catch (error) {

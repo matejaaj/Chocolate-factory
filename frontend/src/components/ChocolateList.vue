@@ -28,7 +28,10 @@
 					<td>{{ chocolate.weight }}</td>
 					<td>{{ chocolate.description }}</td>
 					<td>
-						<img :src="getChocolateImage(chocolate.image)" alt="Chocolate Image" />
+						<img
+							:src="getChocolateImage(chocolate.image)"
+							alt="Chocolate Image"
+						/>
 					</td>
 					<td>{{ chocolate.status }}</td>
 					<td>{{ chocolate.quantity }}</td>
@@ -72,22 +75,22 @@ export default {
 	data() {
 		return {
 			chocolates: [],
-			isManager: false, // Initialize isManager as false
-			isCustomer: false, // Initialize isCustomer as false
-			quantities: {} // To store quantities for each chocolate
+			isManager: false,
+			isCustomer: false,
+			quantities: {},
 		};
 	},
 	computed: {
 		filteredChocolates() {
 			if (this.isCustomer) {
-				return this.chocolates.filter(chocolate => chocolate.quantity > 0);
+				return this.chocolates.filter((chocolate) => chocolate.quantity > 0);
 			}
 			return this.chocolates;
-		}
+		},
 	},
 	created() {
 		this.fetchChocolates();
-		this.checkIfManager(); // Check if the user is a manager when the component is created
+		this.checkIfManager();
 		this.checkIfCustomer();
 	},
 	methods: {
@@ -123,7 +126,7 @@ export default {
 					withCredentials: true,
 				});
 				const role = response.data.role;
-				if (role === 'CUSTOMER') {
+				if (role === "CUSTOMER") {
 					this.isCustomer = true;
 				}
 			} catch (error) {
@@ -135,6 +138,7 @@ export default {
 				await axios.delete(
 					`http://localhost:3000/rest/chocolates/${chocolateId}`,
 					{
+						data: { factoryId: this.factoryId },
 						withCredentials: true,
 					}
 				);
@@ -172,13 +176,13 @@ export default {
 				);
 				if (response.status === 201) {
 					alert(`Added ${quantity} of ${chocolate.name} to cart`);
-					chocolate.quantity -= quantity; // Update the quantity locally
+					chocolate.quantity -= quantity;
 				}
 			} catch (error) {
 				console.error("Error adding to cart:", error);
 			}
-		}
-	}
+		},
+	},
 };
 </script>
 

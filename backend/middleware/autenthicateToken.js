@@ -15,7 +15,7 @@ const authenticateToken = (req, res, next) => {
 		req.role = decoded.role;
 		req.isBlocked = decoded.isBlocked;
 
-		console.log("Decoded JWT:", decoded); // Dodavanje loga za decoded objekat
+		// console.log("Decoded JWT:", decoded); // Dodavanje loga za decoded objekat
 
 		if (req.isBlocked) {
 			console.log("USER BLOCKED");
