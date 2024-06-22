@@ -9,9 +9,14 @@ const userController = new UserController();
 router.get("/", authenticateToken, isAdmin, (req, res) =>
 	userController.getAllUsers(req, res)
 );
-router.get("/:id", authenticateToken, (req, res) =>
-	userController.getUserById(req, res)
+
+router.get("/profile", authenticateToken, (req, res) =>
+	userController.getUserProfile(req, res)
 );
+
+// router.get("/:id", authenticateToken, (req, res) =>
+// 	userController.getUserById(req, res)
+// );
 router.put("/:id", authenticateToken, (req, res) =>
 	userController.updateUser(req, res)
 );

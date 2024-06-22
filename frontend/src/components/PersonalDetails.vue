@@ -1,7 +1,8 @@
 <template>
-	<div class="edit-profile">
-		<h2>Edit Profile</h2>
-		<form @submit.prevent="updateProfile">
+	<div class="personal-details">
+		<button @click="goToResetPassword">Reset Password</button>
+		<h2>Personal Details</h2>
+		<form @submit.prevent="updateDetails">
 			<div>
 				<label for="username">Username:</label>
 				<input type="text" v-model="user.username" readonly />
@@ -25,18 +26,6 @@
 				<label for="birthDate">Birth Date:</label>
 				<input type="date" v-model="user.birthDate" required />
 			</div>
-			<div>
-				<label for="oldPassword">Old Password:</label>
-				<input type="password" v-model="passwords.oldPassword" />
-			</div>
-			<div>
-				<label for="newPassword">New Password:</label>
-				<input type="password" v-model="passwords.newPassword" />
-			</div>
-			<div>
-				<label for="confirmPassword">Confirm New Password:</label>
-				<input type="password" v-model="passwords.confirmPassword" />
-			</div>
 			<button type="submit">Save Changes</button>
 			<p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 			<p v-if="successMessage" class="success">{{ successMessage }}</p>
@@ -50,7 +39,7 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
-	name: "EditProfileView",
+	name: "PersonalDetails",
 	setup() {
 		const user = ref({
 			username: "",
@@ -58,11 +47,6 @@ export default {
 			lastName: "",
 			gender: "Male",
 			birthDate: "",
-		});
-		const passwords = ref({
-			oldPassword: "",
-			newPassword: "",
-			confirmPassword: "",
 		});
 		const errorMessage = ref("");
 		const successMessage = ref("");
@@ -115,26 +99,16 @@ export default {
 			}
 		};
 
-		const updateProfile = async () => {
+		const updateDetails = async () => {
 			errorMessage.value = "";
 			successMessage.value = "";
 
 			try {
 				validateUserDetails(user.value);
 
-				if (passwords.value.newPassword !== passwords.value.confirmPassword) {
-					errorMessage.value = "New passwords do not match";
-					return;
-				}
-
-				const payload = {
-					...user.value,
-					...passwords.value,
-				};
-
 				const response = await axios.put(
 					`http://localhost:3000/rest/users/profile`,
-					payload,
+					user.value,
 					{
 						withCredentials: true,
 					}
@@ -157,23 +131,27 @@ export default {
 			}
 		};
 
+		const goToResetPassword = () => {
+			router.push("/edit-profile/reset-password");
+		};
+
 		onMounted(() => {
 			fetchUserProfile();
 		});
 
 		return {
 			user,
-			passwords,
 			errorMessage,
 			successMessage,
-			updateProfile,
+			updateDetails,
+			goToResetPassword,
 		};
 	},
 };
 </script>
 
 <style scoped>
-.edit-profile {
+.personal-details {
 	margin: 20px;
 }
 form {

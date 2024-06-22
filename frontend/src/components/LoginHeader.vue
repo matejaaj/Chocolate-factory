@@ -4,15 +4,28 @@
 			<h1>Chocolate Factory</h1>
 		</div>
 		<div class="auth">
-			<span v-if="isAuthenticated && isCustomer" @click="navigateToOrders" class="orders">
+			<span
+				v-if="isAuthenticated && isCustomer"
+				@click="navigateToOrders"
+				class="orders"
+			>
 				<img src="@/assets/orders.png" alt="Orders" />
 				Orders
 			</span>
-			<span v-if="isAuthenticated && isCustomer" @click="navigateToCart" class="cart">
+			<span
+				v-if="isAuthenticated && isCustomer"
+				@click="navigateToCart"
+				class="cart"
+			>
 				<img src="@/assets/cart.png" alt="Cart" />
 				Cart
 			</span>
-			<span @click="handleAuth">{{ isAuthenticated ? "Logout" : "Prijava" }}</span>
+			<span v-if="isAuthenticated" @click="navigateToProfile" class="profile">
+				Profile
+			</span>
+			<span @click="handleAuth">{{
+				isAuthenticated ? "Logout" : "Prijava"
+			}}</span>
 		</div>
 	</div>
 </template>
@@ -59,12 +72,16 @@ export default {
 			router.push("/orders");
 		};
 
+		const navigateToProfile = () => {
+			router.push("/profile");
+		};
+
 		const checkIfCustomer = async () => {
 			try {
 				const response = await axios.get("http://localhost:3000/auth/role", {
 					withCredentials: true,
 				});
-				if (response.data.role === 'CUSTOMER') {
+				if (response.data.role === "CUSTOMER") {
 					isCustomer.value = true;
 				} else {
 					isCustomer.value = false;
@@ -94,6 +111,7 @@ export default {
 			handleAuth,
 			navigateToCart,
 			navigateToOrders,
+			navigateToProfile,
 		};
 	},
 };
@@ -125,7 +143,8 @@ export default {
 }
 
 .auth .cart img,
-.auth .orders img {
+.auth .orders img,
+.auth .profile img {
 	width: 24px;
 	height: 24px;
 	margin-right: 5px;

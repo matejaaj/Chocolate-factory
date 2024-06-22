@@ -92,6 +92,15 @@ class UserService {
 		return savedUser;
 	}
 
+	async getUserProfile(userId) {
+		const user = await this.userDAO.getById(userId);
+		if (user) {
+			const { password, ...userWithoutPassword } = user;
+			return userWithoutPassword;
+		}
+		return null;
+	}
+
 	getUserById(userId) {
 		return this.userDAO.getById(userId);
 	}

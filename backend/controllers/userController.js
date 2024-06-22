@@ -27,14 +27,14 @@ class UserController {
 		}
 	}
 
-	getUserById(req, res) {
-		const user = this.userService.getUserById(req.params.id);
-		if (user) {
-			res.json(user);
-		} else {
-			res.status(404).json({ message: "User not found" });
-		}
-	}
+	// getUserById(req, res) {
+	// 	const user = this.userService.getUserById(req.params.id);
+	// 	if (user) {
+	// 		res.json(user);
+	// 	} else {
+	// 		res.status(404).json({ message: "User not found" });
+	// 	}
+	// }
 
 	updateUser(req, res) {
 		const updatedUser = this.userService.updateUser(req.body);
@@ -42,6 +42,19 @@ class UserController {
 			res.json(updatedUser);
 		} else {
 			res.status(404).json({ message: "User not found" });
+		}
+	}
+
+	async getUserProfile(req, res) {
+		try {
+			const user = await this.userService.getUserProfile(req.userId);
+			if (user) {
+				res.json(user);
+			} else {
+				res.status(404).json({ message: "User not found" });
+			}
+		} catch (error) {
+			res.status(500).json({ message: error.message });
 		}
 	}
 

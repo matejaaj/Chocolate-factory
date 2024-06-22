@@ -17,6 +17,10 @@ import ManagerOrderView from "@/views/ManagerOrderView.vue";
 import RegisterEmployeeView from "@/views/RegisterEmployeeView.vue";
 import CreateReviewView from "@/views/CreateReview.vue";
 import FactoryCommentsView from "@/views/FactoryCommentsView.vue";
+import MyProfileView from "@/views/MyProfileView.vue";
+import EditProfileView from "@/views/EditProfileView.vue";
+import ResetPassword from "@/components/ResetPassword.vue";
+import PersonalDetails from "@/components/PersonalDetails.vue";
 
 const routes = [
 	{ path: "/home", component: HomePage },
@@ -94,6 +98,30 @@ const routes = [
 		path: "/factory-comments/:id",
 		name: "FactoryCommentsView",
 		component: FactoryCommentsView,
+	},
+	{
+		path: "/profile",
+		component: MyProfileView,
+		meta: { requiresAuth: true },
+	},
+	{
+		path: "/edit-profile",
+		component: EditProfileView,
+		meta: { requiresAuth: true },
+		children: [
+			{
+				path: "",
+				name: "PersonalDetails",
+				component: PersonalDetails,
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "reset-password",
+				name: "ResetPassword",
+				component: ResetPassword,
+				meta: { requiresAuth: true },
+			},
+		],
 	},
 ];
 
