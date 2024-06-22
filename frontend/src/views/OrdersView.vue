@@ -70,7 +70,7 @@
 					<td>{{ order.status }}</td>
 					<td>
 						<button @click="viewOrderDetails(order.id)">View Details</button>
-						<button v-if="order.status === 'Obrada'" @click="cancelOrder(order.id)">Cancel Order</button>
+						<button v-if="order.status === 'Obrada'" @click="cancelOrder(order.id)" class="decline-button">Cancel Order</button>
 					</td>
 				</tr>
 			</tbody>
@@ -180,6 +180,13 @@ export default {
 }
 
 button {
+	padding: 5px 10px;
+	cursor: pointer;
+}
+.decline-button {
+	background-color: red;
+	color: white;
+	border: none;
 	padding: 5px 10px;
 	cursor: pointer;
 }
