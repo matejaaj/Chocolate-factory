@@ -126,6 +126,39 @@ class UserService {
 		}
 		return null;
 	}
+
+	async updateUserDetails(userId, userDetails) {
+		const user = await this.userDAO.getById(userId);
+		if (user) {
+			if (userDetails.username && userDetails.username !== user.username) {
+				const existingUser = await this.userDAO.findByUsername(
+					userDetails.username
+				);
+				if (existingUser && existingUser.id !== userId) {
+					throw new Error("Username already exists");
+				}
+				user.username = userDetails.username;
+			}
+
+			user.firstName = userDetails.firstName || user.firstName;
+			user.lastName = userDetails.lastName || user.lastName;
+			user.gender = userDetails.gender || user.gender;
+			user.birthDate = userDetails.birthDate || user.birthDate;
+
+			return this.userDAO.update(user);
+		}
+		return null;
+	}
+
+	async resetPassword(userId, oldPassword, newPassword) {
+		const user = await this.userDAO.getById(userId);
+		if (user && user.password === oldPassword) {
+			user.password = newPassword;
+			await this.userDAO.update(user);
+			return true;
+		}
+		return false;
+	}
 }
 
 module.exports = UserService;

@@ -79,6 +79,45 @@ class UserController {
 				.json({ message: "User not found or cannot unblock an administrator" });
 		}
 	}
+
+	async updateUserDetails(req, res) {
+		try {
+			const updatedUser = await this.userService.updateUserDetails(
+				req.userId,
+				req.body
+			);
+			if (updatedUser) {
+				res.json(updatedUser);
+			} else {
+				res.status(404).json({ message: "User not found" });
+			}
+		} catch (error) {
+			if (error.message === "Username already exists") {
+				res.status(409).json({ message: error.message });
+			} else {
+				res.status(500).json({ message: error.message });
+			}
+		}
+	}
+
+	async resetPassword(req, res) {
+		try {
+			const { oldPassword, newPassword } = req.body;
+			const userId = req.userId;
+			const success = await this.userService.resetPassword(
+				userId,
+				oldPassword,
+				newPassword
+			);
+			if (success) {
+				res.json({ message: "Password updated successfully" });
+			} else {
+				res.status(400).json({ message: "Old password is incorrect" });
+			}
+		} catch (error) {
+			res.status(500).json({ message: error.message });
+		}
+	}
 }
 
 module.exports = UserController;

@@ -14,17 +14,19 @@ router.get("/profile", authenticateToken, (req, res) =>
 	userController.getUserProfile(req, res)
 );
 
-// router.get("/:id", authenticateToken, (req, res) =>
-// 	userController.getUserById(req, res)
-// );
-router.put("/:id", authenticateToken, (req, res) =>
-	userController.updateUser(req, res)
-);
 router.put("/:id/block", authenticateToken, isAdmin, (req, res) =>
 	userController.blockUser(req, res)
 );
 router.put("/:id/unblock", authenticateToken, isAdmin, (req, res) =>
 	userController.unblockUser(req, res)
+);
+
+router.put("/profile", authenticateToken, (req, res) =>
+	userController.updateUserDetails(req, res)
+);
+
+router.put("/reset-password", authenticateToken, (req, res) =>
+	userController.resetPassword(req, res)
 );
 
 module.exports = router;

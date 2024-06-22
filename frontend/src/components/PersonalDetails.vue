@@ -5,7 +5,7 @@
 		<form @submit.prevent="updateDetails">
 			<div>
 				<label for="username">Username:</label>
-				<input type="text" v-model="user.username" readonly />
+				<input type="text" v-model="user.username" required />
 			</div>
 			<div>
 				<label for="firstName">First Name:</label>
