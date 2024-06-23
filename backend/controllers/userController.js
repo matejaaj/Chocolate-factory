@@ -27,14 +27,14 @@ class UserController {
 		}
 	}
 
-	// getUserById(req, res) {
-	// 	const user = this.userService.getUserById(req.params.id);
-	// 	if (user) {
-	// 		res.json(user);
-	// 	} else {
-	// 		res.status(404).json({ message: "User not found" });
-	// 	}
-	// }
+	 getUserById(req, res) {
+	 	const user = this.userService.getUserById(req.params.id);
+	 	if (user) {
+	 		res.json(user);
+	 	} else {
+	 		res.status(404).json({ message: "User not found" });
+	 	}
+	 }
 
 	updateUser(req, res) {
 		const updatedUser = this.userService.updateUser(req.body);

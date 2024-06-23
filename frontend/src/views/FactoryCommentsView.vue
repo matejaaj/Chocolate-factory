@@ -67,7 +67,7 @@ export default {
 				}
 
 				const userPromises = comments.map(comment => 
-					axios.get(`http://localhost:3000/rest/users/${comment.userId}`, {
+					axios.get(`http://localhost:3000/rest/users/${comment.userId}/getUser`, {
 						withCredentials: true
 					})
 				);

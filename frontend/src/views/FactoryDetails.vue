@@ -66,7 +66,7 @@ export default {
 		async checkIfManager() {
 			try {
 				const response = await axios.get(
-					`http://localhost:3000/rest/factories/isManager/${this.$route.params.id}`,
+					`http://localhost:3000/rest/factories/isInFactory/${this.$route.params.id}`,
 					{
 						withCredentials: true,
 					}

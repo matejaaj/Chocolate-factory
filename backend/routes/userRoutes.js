@@ -29,4 +29,8 @@ router.put("/reset-password", authenticateToken, (req, res) =>
 	userController.resetPassword(req, res)
 );
 
+router.get("/:id/getUser", authenticateToken, (req, res) =>
+	userController.getUserById(req, res)
+);
+
 module.exports = router;

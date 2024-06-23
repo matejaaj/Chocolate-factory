@@ -47,8 +47,8 @@ class CartDAO {
 	}
 
 	deleteByUserIdAndChocolateId(userId, chocolateId) {
-		this.cartItems = this.serializer.fromCSV(this.filePath, Cart);
-		const index = this.cartItems.findIndex((item) => item.userId == userId && item.chocolateId == chocolateId);
+		this.cartItems = this.getByUserId(userId);
+		const index = this.cartItems.findIndex((item) => item.userId == userId && item.chocolateId == chocolateId );
 		if (index !== -1) {
 			this.cartItems[index].isDeleted = true;
 			this.serializer.toCSV(this.filePath, this.cartItems);
