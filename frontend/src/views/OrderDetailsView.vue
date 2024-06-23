@@ -55,6 +55,7 @@ export default {
 		};
 	},
 	created() {
+		console.log("Order ID:", this.id); // Proveri ID
 		this.fetchOrderDetails();
 	},
 	methods: {
@@ -64,6 +65,7 @@ export default {
 					withCredentials: true,
 				});
 				this.order = response.data;
+				console.log("Order:", this.order); // Proveri dobijeni order
 				await this.fetchOrderItems();
 			} catch (error) {
 				console.error("Error fetching order details:", error);
@@ -71,8 +73,9 @@ export default {
 		},
 		async fetchOrderItems() {
 			try {
+				console.log("Cart Item IDs:", this.order.cartItemIds); // Proveri cartItemIds
 				const items = await Promise.all(
-					this.order.cartItemIds.map(async (id) => {
+					this.order.chocolateIds.map(async (id) => {
 						const response = await axios.get(`http://localhost:3000/rest/chocolates/${id}`, {
 							withCredentials: true,
 						});
