@@ -1,17 +1,21 @@
 const FactoryDAO = require("../dao/factoryDAO");
 const Factory = require("../model/factory");
+const ReviewService = require("./reviewService");
 
 class FactoryService {
 	constructor() {
 		this.factoryDAO = new FactoryDAO();
+		this.reviewService = new ReviewService();
 	}
 
 	getAllFactories() {
-		return this.factoryDAO.getAll();
+		const factories = this.factoryDAO.getAll();
+		return factories.map(factory => this.addAverageRating(factory));
 	}
 
 	getFactoryById(id) {
-		return this.factoryDAO.getById(id);
+		const factory = this.factoryDAO.getById(id);
+		return this.addAverageRating(factory);
 	}
 
 	createFactory(data) {
@@ -45,6 +49,14 @@ class FactoryService {
 			return true;
 		}
 		return false;
+	}
+
+	addAverageRating(factory) {
+		const reviews = this.reviewService.getReviewsByFactoryId(factory.id).filter(review => review.status === "approved");
+		const totalGrades = reviews.reduce((sum, review) => sum + review.grade, 0);
+		const averageRating = reviews.length > 0 ? totalGrades / reviews.length : 0;
+		factory.rating = averageRating;
+		return factory;
 	}
 }
 
