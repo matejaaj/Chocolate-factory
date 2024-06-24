@@ -38,6 +38,7 @@
 		</div>
 		<div>
 			<h3>Total: {{ total }}</h3>
+			<h3 v-if="discountedTotal < total">Discounted Total: {{ discountedTotal }}</h3>
 		</div>
 		<div v-if="cartItems.length">
 			<button @click="createOrder">Buy</button>
@@ -55,11 +56,14 @@ export default {
 			cartItems: [],
 			chocolates: [],
 			total: 0,
+			discountedTotal: 0,
+			discount: 0
 		};
 	},
 	created() {
 		this.fetchCart();
 		this.fetchChocolates();
+		this.fetchDiscount();
 	},
 	methods: {
 		async fetchCart() {
@@ -82,6 +86,17 @@ export default {
 				this.calculateTotal();
 			} catch (error) {
 				console.error("Error fetching chocolates:", error);
+			}
+		},
+		async fetchDiscount() {
+			try {
+				const response = await axios.get("http://localhost:3000/rest/customers/discount/find", {
+					withCredentials: true,
+				});
+				this.discount = response.data.discount;
+				this.calculateTotal();
+			} catch (error) {
+				console.error("Error fetching discount:", error);
 			}
 		},
 		getChocolateById(chocolateId) {
@@ -116,6 +131,7 @@ export default {
 				alert("Order created successfully!");
 				this.cartItems = [];
 				this.total = 0;
+				this.discountedTotal = 0;
 				this.fetchCart();
 			} catch (error) {
 				console.error("Error creating order:", error);
@@ -124,6 +140,7 @@ export default {
 		calculateTotal() {
 			if (this.cartItems.length && this.chocolates.length) {
 				this.total = this.cartItems.reduce((acc, item) => acc + this.getChocolateById(item.chocolateId).price * item.quantity, 0);
+				this.discountedTotal = this.total * (1 - this.discount / 100);
 			}
 		},
 		getChocolateImage(imagePath) {
@@ -133,7 +150,7 @@ export default {
 				console.error(`Image not found: ${imagePath}`);
 				return "";
 			}
-		},
+		}
 	},
 };
 </script>

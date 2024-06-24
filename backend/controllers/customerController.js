@@ -41,6 +41,15 @@ class CustomerController {
       res.status(404).json({ message: "Customer not found" });
     }
   }
+
+  getCustomerDiscount(req, res) {
+		const customerId = req.userId; 
+		const discount = this.customerService.getDiscount(customerId);
+		if (discount === null) {
+			return res.status(404).send('Customer not found');
+		}
+		res.json({ discount });
+	}
 }
 
 module.exports = CustomerController;

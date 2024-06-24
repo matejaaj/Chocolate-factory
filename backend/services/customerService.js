@@ -69,6 +69,22 @@ class CustomerService {
 		}
 		return null;
 	}
+
+	getDiscount(customerId) {
+		console.log("CustomerService.getDiscount called with customerId:", customerId);
+		const customer = this.getCustomerById(customerId);
+		if (!customer) {
+			console.log("Customer not found in getDiscount");
+			return null;
+		}
+		const customerType = this.customerTypeService.getCustomerTypeById(customer.customerTypeId);
+		if (!customerType) {
+			console.log("Customer type not found");
+			return null;
+		}
+		console.log("Customer discount:", customerType.discount);
+		return customerType.discount;
+	}
 }
 
 module.exports = CustomerService;

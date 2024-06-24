@@ -66,41 +66,46 @@ class OrderService {
 	createOrder(userId) {
 		const cartItems = this.cartService.getCart(userId);
 		const groupedByFactory = {};
-
+	
 		cartItems.forEach(item => {
 			if (!groupedByFactory[item.factoryId]) {
 				groupedByFactory[item.factoryId] = [];
 			}
 			groupedByFactory[item.factoryId].push(item);
 		});
-
+	
+		const discount = this.customerService.getDiscount(userId) || 0;
+	
 		const createdOrders = Object.keys(groupedByFactory).map(factoryId => {
 			const items = groupedByFactory[factoryId];
-			const totalPrice = items.reduce((acc, item) => {
+			let totalPrice = items.reduce((acc, item) => {
 				const chocolate = this.chocolateService.getChocolateById(item.chocolateId);
 				return acc + (chocolate.price * item.quantity);
 			}, 0);
+			
+			const discountedPrice = totalPrice * (1 - discount / 100);
+	
 			const cartItemIds = items.map(item => item.id);
 			const chocolateIds = items.map(item => item.chocolateId);
-
+	
 			const newOrder = new Order(
 				userId,
-				totalPrice,
+				discountedPrice, // Apply the discounted price
 				chocolateIds,
 				new Date().toISOString(),
 				"Obrada",
 				parseInt(factoryId)
 			);
-
+	
 			this.orderDAO.save(newOrder);
-
-			const points = (totalPrice / 1000) * 133;
+	
+			const points = (totalPrice / 1000) * 133; // Calculate points based on original totalPrice
 			this.customerService.addPoints(userId, points);
 			this.cartService.markItemsAsOrdered(cartItemIds);
-
+	
 			return newOrder;
 		});
-
+	
 		return createdOrders;
 	}
 
