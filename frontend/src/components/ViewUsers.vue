@@ -132,6 +132,7 @@
 							>
 						</span>
 					</th>
+					<th v-if="filter.role === 'CUSTOMER'">Is Suspicious</th>
 					<th>Is Blocked</th>
 				</tr>
 			</thead>
@@ -146,6 +147,7 @@
 					<td>{{ user.role }}</td>
 					<td v-if="filter.role === 'CUSTOMER'">{{ user.customerTypeName }}</td>
 					<td v-if="filter.role === 'CUSTOMER'">{{ user.points }}</td>
+					<td v-if="filter.role === 'CUSTOMER'">{{ user.isSuspicious ? 'YES' : 'NO' }}</td>
 					<td>
 						{{ user.isBlocked ? "Yes" : "No" }}
 						<span v-if="user.role !== 'ADMINISTRATOR'">
@@ -217,7 +219,21 @@ export default {
 					},
 					withCredentials: true,
 				});
-				this.users = response.data;
+				
+				const users = response.data;
+
+				// Fetch suspicious status for each user
+				const suspiciousPromises = users.map(async user => {
+					if (user.role === 'CUSTOMER') {
+						const suspiciousResponse = await axios.get(`http://localhost:3000/rest/cancellations/isSuspicious/${user.id}`, {
+							withCredentials: true,
+						});
+						user.isSuspicious = suspiciousResponse.data.isSuspicious;
+					}
+					return user;
+				});
+
+				this.users = await Promise.all(suspiciousPromises);
 			} catch (error) {
 				console.error("Error fetching users:", error);
 			}
