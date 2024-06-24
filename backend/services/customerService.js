@@ -1,9 +1,11 @@
 const CustomerDAO = require("../dao/customerDAO");
 const Customer = require("../model/customer");
+const CustomerTypeService = require("../services/customerTypeService");
 
 class CustomerService {
 	constructor() {
 		this.customerDAO = new CustomerDAO();
+		this.customerTypeService = new CustomerTypeService();
 	}
 
 	getAllCustomers() {
@@ -46,6 +48,23 @@ class CustomerService {
 		if (customer) {
 			customer.points += points;
 			this.customerDAO.update(customer);
+
+			const customerTypes = this.customerTypeService.getAllCustomerTypes();
+			let appropriateType = null;
+
+			customerTypes.forEach(type => {
+				if (customer.points >= type.pointsRequired) {
+					if (!appropriateType || type.pointsRequired > appropriateType.pointsRequired) {
+						appropriateType = type;
+					}
+				}
+			});
+
+			if (appropriateType && customer.customerTypeId !== appropriateType.id) {
+				customer.customerTypeId = appropriateType.id;
+				this.customerDAO.update(customer);
+			}
+
 			return customer;
 		}
 		return null;

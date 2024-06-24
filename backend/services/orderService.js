@@ -4,6 +4,7 @@ const CustomerService = require("./customerService");
 const CartService = require("./cartService");
 const ChocolateService = require("./chocolateService");
 const FactoryService = require("./factoryService");
+const CancellationService = require("./cancellationService");
 
 class OrderService {
 	constructor() {
@@ -12,6 +13,7 @@ class OrderService {
 		this.cartService = new CartService();
 		this.chocolateService = new ChocolateService();
 		this.factoryService = new FactoryService();
+		this.cancellationService = new CancellationService();
 	}
 
 	getAllOrders(search = {}, filter = {}, sort = {}) {
@@ -110,6 +112,8 @@ class OrderService {
 
 			const pointsToDeduct = (existingOrder.totalPrice / 1000) * 133 * 4;
 			this.customerService.addPoints(existingOrder.userId, -pointsToDeduct);
+
+			this.cancellationService.createCancellation(existingOrder.userId, id, new Date().toISOString());
 
 			return true;
 		}
