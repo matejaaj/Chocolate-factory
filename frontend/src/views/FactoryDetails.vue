@@ -102,12 +102,7 @@ export default {
 			return location ? Number(location.longitude) : 0;
 		},
 		getFactoryLogo(logoPath) {
-			try {
-				return require(`@/assets/images/${logoPath.split("/").pop()}`);
-			} catch (e) {
-				console.error(`Image not found: ${logoPath}`);
-				return "";
-			}
+			return `http://localhost:3000/${logoPath.replace(/\\/g, "/")}`;
 		},
 		viewFactoryOrders() {
 			this.$router.push(`/manager-orders/${this.factory.id}`);

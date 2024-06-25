@@ -81,12 +81,8 @@ export default {
 				: "Unknown location";
 		},
 		getFactoryLogo(logoPath) {
-			try {
-				return require(`@/assets/images/${logoPath.split("/").pop()}`);
-			} catch (e) {
-				console.error(`Image not found: ${logoPath}`);
-				return "";
-			}
+			// Assuming your backend serves static files from the "uploads" directory
+			return `http://localhost:3000/${logoPath.replace(/\\/g, "/")}`;
 		},
 		goToFactoryDetails(factoryId) {
 			this.$router.push(`/factories/${factoryId}`);
