@@ -14,14 +14,7 @@
 			<tbody>
 				<tr v-for="factory in sortedFactories" :key="factory.id">
 					<td>{{ factory.name }}</td>
-					<td>
-						<div>{{ getLocation(factory.locationId) }}</div>
-						<MapMini
-							:latitude="getLocationLatitude(factory.locationId)"
-							:longitude="getLocationLongitude(factory.locationId)"
-							:mapId="'map-' + factory.id"
-						/>
-					</td>
+					<td>{{ getLocation(factory.locationId) }}</td>
 					<td>
 						<img :src="getFactoryLogo(factory.logo)" alt="Factory Logo" />
 					</td>
@@ -40,13 +33,9 @@
 
 <script>
 import axios from "axios";
-import MapMini from "@/components/MapMini.vue";
 
 export default {
 	name: "ChocolateFactories",
-	components: {
-		MapMini,
-	},
 	data() {
 		return {
 			factories: [],
@@ -91,19 +80,6 @@ export default {
 				? `${location.street}, ${location.city}, ${location.postalCode}`
 				: "Unknown location";
 		},
-		getLocationLatitude(locationId) {
-			const location = this.locations.find((loc) => loc.id == locationId);
-			const latitude = location ? Number(location.latitude) : 0;
-			console.log(`Location ID: ${locationId}, Latitude: ${latitude}`);
-			return latitude;
-		},
-		getLocationLongitude(locationId) {
-			const location = this.locations.find((loc) => loc.id == locationId);
-			const longitude = location ? Number(location.longitude) : 0;
-			console.log(`Location ID: ${locationId}, Longitude: ${longitude}`);
-			return longitude;
-		},
-
 		getFactoryLogo(logoPath) {
 			try {
 				return require(`@/assets/images/${logoPath.split("/").pop()}`);
