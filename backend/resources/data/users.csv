@@ -4,3 +4,5 @@
 4|customer|customer|John|Doe|Male|1990-01-01|CUSTOMER|false|false
 5|employee|employee|John|Doe|Male|1990-01-01|EMPLOYEE|false|false
 6|r|r|r|r|male|2024-07-05|EMPLOYEE|false|false
+7|ar|ar|ar|ar|Female|2024-07-04|MANAGER|false|false
+8|is|is|is|is|Male|2024-06-20|MANAGER|false|false

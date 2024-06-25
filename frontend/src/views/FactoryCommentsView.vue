@@ -18,8 +18,18 @@
 					<td>{{ comment.grade }}</td>
 					<td>{{ comment.status }}</td>
 					<td v-if="isManagerOrAdmin">
-						<button @click="approveComment(comment.id)" v-if="comment.status === 'Pending'">Approve</button>
-						<button @click="rejectComment(comment.id)" v-if="comment.status === 'Pending'">Reject</button>
+						<button
+							@click="approveComment(comment.id)"
+							v-if="comment.status === 'Pending'"
+						>
+							Approve
+						</button>
+						<button
+							@click="rejectComment(comment.id)"
+							v-if="comment.status === 'Pending'"
+						>
+							Reject
+						</button>
 					</td>
 				</tr>
 			</tbody>
@@ -27,20 +37,20 @@
 		<div v-else>
 			<p>No comments found for this factory.</p>
 		</div>
-    </div>
-	</template>
+	</div>
+</template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-	name: 'FactoryCommentsView',
+	name: "FactoryCommentsView",
 	data() {
 		return {
 			comments: [],
-			factoryName: '',
+			factoryName: "",
 			isManagerOrAdmin: false,
-			userRole: ''
+			userRole: "",
 		};
 	},
 	created() {
@@ -52,24 +62,35 @@ export default {
 		async fetchFactoryComments() {
 			try {
 				const factoryId = this.$route.params.id;
-				const factoryResponse = await axios.get(`http://localhost:3000/rest/factories/${factoryId}`, {
-					withCredentials: true
-				});
+				const factoryResponse = await axios.get(
+					`http://localhost:3000/rest/factories/${factoryId}`,
+					{
+						withCredentials: true,
+					}
+				);
 				this.factoryName = factoryResponse.data.name;
 
-				const commentsResponse = await axios.get(`http://localhost:3000/rest/reviews/factory/${factoryId}`, {
-					withCredentials: true
-				});
+				const commentsResponse = await axios.get(
+					`http://localhost:3000/rest/reviews/factory/${factoryId}`,
+					{
+						withCredentials: true,
+					}
+				);
 				let comments = commentsResponse.data;
 
-				if (this.userRole === 'CUSTOMER') {
-					comments = comments.filter(comment => comment.status === 'approved');
+				if (this.userRole === "CUSTOMER") {
+					comments = comments.filter(
+						(comment) => comment.status === "approved"
+					);
 				}
 
-				const userPromises = comments.map(comment => 
-					axios.get(`http://localhost:3000/rest/users/${comment.userId}/getUser`, {
-						withCredentials: true
-					})
+				const userPromises = comments.map((comment) =>
+					axios.get(
+						`http://localhost:3000/rest/users/${comment.userId}/getUser`,
+						{
+							withCredentials: true,
+						}
+					)
 				);
 				const userResponses = await Promise.all(userPromises);
 
@@ -77,46 +98,54 @@ export default {
 					const user = userResponses[index].data;
 					return {
 						...comment,
-						userName: `${user.firstName} ${user.lastName}`
+						userName: `${user.firstName} ${user.lastName}`,
 					};
 				});
 			} catch (error) {
-				console.error('Error fetching factory comments:', error);
+				console.error("Error fetching factory comments:", error);
 			}
 		},
 		async checkUserRole() {
 			try {
-				const response = await axios.get('http://localhost:3000/auth/role', {
-					withCredentials: true
+				const response = await axios.get("http://localhost:3000/auth/role", {
+					withCredentials: true,
 				});
 				const role = response.data.role;
-				this.isManagerOrAdmin = role === 'MANAGER' || role === 'ADMINISTRATOR';
+				this.isManagerOrAdmin = role === "MANAGER" || role === "ADMINISTRATOR";
 				this.userRole = role;
 			} catch (error) {
-				console.error('Error checking user role:', error);
+				console.error("Error checking user role:", error);
 			}
 		},
 		async approveComment(commentId) {
 			try {
-				await axios.put(`http://localhost:3000/rest/reviews/approve/${commentId}`, {}, {
-					withCredentials: true
-				});
+				await axios.put(
+					`http://localhost:3000/rest/reviews/approve/${commentId}`,
+					{},
+					{
+						withCredentials: true,
+					}
+				);
 				this.fetchFactoryComments();
 			} catch (error) {
-				console.error('Error approving comment:', error);
+				console.error("Error approving comment:", error);
 			}
 		},
 		async rejectComment(commentId) {
 			try {
-				await axios.put(`http://localhost:3000/rest/reviews/reject/${commentId}`, {}, {
-					withCredentials: true
-				});
+				await axios.put(
+					`http://localhost:3000/rest/reviews/reject/${commentId}`,
+					{},
+					{
+						withCredentials: true,
+					}
+				);
 				this.fetchFactoryComments();
 			} catch (error) {
-				console.error('Error rejecting comment:', error);
+				console.error("Error rejecting comment:", error);
 			}
-		}
-	}
+		},
+	},
 };
 </script>
 

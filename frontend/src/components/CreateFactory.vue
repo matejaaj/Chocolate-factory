@@ -16,22 +16,15 @@
 			</div>
 			<div>
 				<label for="location">Location:</label>
-				<div id="map" class="map"></div>
+				<MapComponent
+					:initialLatitude="factory.location.latitude"
+					:initialLongitude="factory.location.longitude"
+					@updateLocation="updateLocation"
+					@updateAddressFields="updateAddressFields"
+				/>
 				<div v-if="factory.location.latitude && factory.location.longitude">
 					<p>Latitude: {{ factory.location.latitude }}</p>
 					<p>Longitude: {{ factory.location.longitude }}</p>
-				</div>
-				<div>
-					<label for="street">Street:</label>
-					<input type="text" v-model="factory.location.street" required />
-				</div>
-				<div>
-					<label for="city">City:</label>
-					<input type="text" v-model="factory.location.city" required />
-				</div>
-				<div>
-					<label for="postalCode">Postal Code:</label>
-					<input type="text" v-model="factory.location.postalCode" required />
 				</div>
 			</div>
 			<div v-if="managers.length">
@@ -96,25 +89,21 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import "ol/ol.css";
-import { Map, View, Feature } from "ol";
-import TileLayer from "ol/layer/Tile";
-import OSM from "ol/source/OSM";
-import { Point } from "ol/geom";
-import { Vector as VectorSource } from "ol/source";
-import VectorLayer from "ol/layer/Vector";
-import { Icon, Style } from "ol/style";
+import MapComponent from "./MapComponent.vue";
 
 export default {
 	name: "CreateFactory",
+	components: {
+		MapComponent,
+	},
 	setup() {
 		const factory = ref({
 			name: "",
 			workingHours: "",
 			logo: null,
 			location: {
-				latitude: null,
-				longitude: null,
+				latitude: 0,
+				longitude: 0,
 				street: "",
 				city: "",
 				postalCode: "",
@@ -321,6 +310,17 @@ export default {
 			}
 		};
 
+		const updateLocation = ({ latitude, longitude }) => {
+			factory.value.location.latitude = latitude;
+			factory.value.location.longitude = longitude;
+		};
+
+		const updateAddressFields = (addressFields) => {
+			factory.value.location.street = addressFields.street;
+			factory.value.location.city = addressFields.city;
+			factory.value.location.postalCode = addressFields.postalCode;
+		};
+
 		onMounted(() => {
 			fetchManagers();
 
@@ -329,56 +329,6 @@ export default {
 					const { latitude, longitude } = position.coords;
 					factory.value.location.latitude = latitude;
 					factory.value.location.longitude = longitude;
-
-					const map = new Map({
-						target: "map",
-						layers: [
-							new TileLayer({
-								source: new OSM(),
-							}),
-						],
-						view: new View({
-							center: [longitude, latitude],
-							zoom: 12,
-						}),
-					});
-
-					const vectorSource = new VectorSource();
-					const vectorLayer = new VectorLayer({
-						source: vectorSource,
-					});
-					map.addLayer(vectorLayer);
-
-					map.on("click", (event) => {
-						const coordinates = event.coordinate;
-						factory.value.location.latitude = coordinates[1];
-						factory.value.location.longitude = coordinates[0];
-
-						const iconFeature = new Feature({
-							geometry: new Point(coordinates),
-						});
-
-						const iconStyle = new Style({
-							image: new Icon({
-								src: "https://openlayers.org/en/v4.6.5/examples/data/icon.png",
-							}),
-						});
-						iconFeature.setStyle(iconStyle);
-						vectorSource.clear();
-						vectorSource.addFeature(iconFeature);
-					});
-
-					const iconFeature = new Feature({
-						geometry: new Point([longitude, latitude]),
-					});
-
-					const iconStyle = new Style({
-						image: new Icon({
-							src: "https://openlayers.org/en/v4.6.5/examples/data/icon.png",
-						}),
-					});
-					iconFeature.setStyle(iconStyle);
-					vectorSource.addFeature(iconFeature);
 				});
 			}
 		});
@@ -392,6 +342,8 @@ export default {
 			submitForm,
 			errorMessage,
 			successMessage,
+			updateLocation,
+			updateAddressFields,
 		};
 	},
 };
@@ -447,11 +399,5 @@ button[type="button"] {
 
 button[type="submit"] {
 	background-color: #379683;
-}
-
-.map {
-	width: 400px;
-	height: 400px;
-	margin-top: 20px;
 }
 </style>
