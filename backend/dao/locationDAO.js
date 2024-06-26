@@ -49,6 +49,7 @@ class LocationDAO {
 	}
 
 	getById(locationId) {
+		locationId = parseInt(locationId);
 		this.locations = this.serializer.fromCSV(this.filePath, Location);
 		return this.locations.find((location) => location.id === locationId);
 	}

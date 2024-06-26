@@ -13,8 +13,29 @@ class FactoryController {
 	}
 
 	getAllFactories(req, res) {
-		const factories = this.factoryService.getAllFactories();
-		res.json(factories);
+		try {
+			const search = {
+				name: req.query.name || "",
+				location: req.query.location || "",
+				rating: req.query.rating ? parseFloat(req.query.rating) : null,
+			};
+			const filter = {
+				isOpen: req.query.isOpen === "true",
+			};
+			const sort = {
+				field: req.query.sortField || "name",
+				order: req.query.sortOrder || "asc",
+			};
+
+			const factories = this.factoryService.getAllFactories(
+				search,
+				filter,
+				sort
+			);
+			res.json(factories);
+		} catch (error) {
+			res.status(500).json({ message: "Error fetching factories" });
+		}
 	}
 
 	async isUserInFactory(req, res) {

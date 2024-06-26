@@ -11,6 +11,7 @@ class LocationService {
 	}
 
 	getLocationById(id) {
+		id = parseInt(id);
 		return this.locationDAO.getById(id);
 	}
 
