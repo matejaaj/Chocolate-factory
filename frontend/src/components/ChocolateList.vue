@@ -158,6 +158,9 @@ export default {
 				console.error("Error deleting chocolate:", error);
 			}
 		},
+		getChocolateImage(imagePath) {
+			return `http://localhost:3000/${imagePath.replace(/\\/g, "/")}`;
+		},
 		async updateQuantity(chocolateId, quantity) {
 			try {
 				await axios.put(
@@ -178,14 +181,6 @@ export default {
 		},
 		addChocolate() {
 			this.$router.push(`/add-chocolate/${this.factoryId}`);
-		},
-		getChocolateImage(imagePath) {
-			try {
-				return require(`@/assets/images/${imagePath.split("/").pop()}`);
-			} catch (e) {
-				console.error(`Image not found: ${imagePath}`);
-				return "";
-			}
 		},
 		async addToCart(chocolate, quantity) {
 			if (quantity > chocolate.quantity) {
