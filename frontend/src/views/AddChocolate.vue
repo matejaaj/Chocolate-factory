@@ -43,7 +43,7 @@
 			</div>
 			<div class="form-group">
 				<label for="image">Image:</label>
-				<input type="text" v-model="chocolate.image" id="image" required />
+				<input type="file" @change="onFileChange" required />
 			</div>
 			<div class="form-group">
 				<label for="status">Status:</label>
@@ -71,7 +71,7 @@ export default {
 				category: "",
 				weight: "",
 				description: "",
-				image: "",
+				image: null,
 				status: "available",
 				quantity: 0,
 				factoryId: this.$route.params.factoryId,
@@ -79,16 +79,43 @@ export default {
 		};
 	},
 	methods: {
+		onFileChange(event) {
+			const file = event.target.files[0];
+			const allowedTypes = ["image/jpeg", "image/png"];
+			const maxFileSize = 5 * 1024 * 1024; // 5MB
+
+			if (file) {
+				if (!allowedTypes.includes(file.type)) {
+					alert("Invalid file type. Only JPEG and PNG are allowed.");
+					event.target.value = null; // Reset the input field
+					this.chocolate.image = null;
+					return;
+				}
+
+				if (file.size > maxFileSize) {
+					alert("File size exceeds the maximum limit of 5MB.");
+					event.target.value = null; // Reset the input field
+					this.chocolate.image = null;
+					return;
+				}
+
+				this.chocolate.image = file;
+			} else {
+				this.chocolate.image = null;
+			}
+		},
 		async createChocolate() {
 			try {
-				await axios.post(
-					"http://localhost:3000/rest/chocolates",
-					this.chocolate,
-					{
-						data: { factoryId: this.factoryId },
-						withCredentials: true,
-					}
-				);
+				const formData = new FormData();
+				Object.keys(this.chocolate).forEach((key) => {
+					formData.append(key, this.chocolate[key]);
+				});
+				formData.set("factoryId", Number(this.chocolate.factoryId)); // Ensure factoryId is a number
+
+				await axios.post("http://localhost:3000/rest/chocolates", formData, {
+					withCredentials: true,
+					headers: { "Content-Type": "multipart/form-data" },
+				});
 				this.$router.push(`/factories/${this.chocolate.factoryId}`);
 			} catch (error) {
 				console.error("Error creating chocolate:", error);

@@ -43,11 +43,14 @@
 			</div>
 			<div class="form-group">
 				<label for="image">Image:</label>
-				<input type="text" v-model="chocolate.image" id="image" required />
+				<input type="file" @change="onFileChange" />
 			</div>
 			<div class="form-group">
 				<label for="status">Status:</label>
-				<input type="text" v-model="chocolate.status" id="status" required />
+				<select v-model="chocolate.status" id="status" required>
+					<option value="available">Available</option>
+					<option value="not available">Not Available</option>
+				</select>
 			</div>
 			<div class="form-group">
 				<label for="quantity">Quantity:</label>
@@ -77,9 +80,10 @@ export default {
 				category: "",
 				weight: "",
 				description: "",
-				image: "",
-				status: "",
-				quantity: "",
+				image: null,
+				status: "available",
+				quantity: 0,
+				factoryId: this.$route.params.factoryId,
 			},
 		};
 	},
@@ -101,13 +105,51 @@ export default {
 				console.error("Error fetching chocolate:", error);
 			}
 		},
+
+		onFileChange(event) {
+			const file = event.target.files[0];
+			const allowedTypes = ["image/jpeg", "image/png"];
+			const maxFileSize = 5 * 1024 * 1024; // 5MB
+
+			if (file) {
+				if (!allowedTypes.includes(file.type)) {
+					alert("Invalid file type. Only JPEG and PNG are allowed.");
+					event.target.value = null; // Reset the input field
+					this.chocolate.image = null;
+					return;
+				}
+
+				if (file.size > maxFileSize) {
+					alert("File size exceeds the maximum limit of 5MB.");
+					event.target.value = null; // Reset the input field
+					this.chocolate.image = null;
+					return;
+				}
+
+				this.chocolate.image = file;
+			} else {
+				this.chocolate.image = null;
+			}
+		},
 		async updateChocolate() {
 			try {
+				const formData = new FormData();
+				Object.keys(this.chocolate).forEach((key) => {
+					if (key !== "image") {
+						formData.append(key, this.chocolate[key]);
+					}
+				});
+				if (this.chocolate.image) {
+					formData.append("image", this.chocolate.image);
+				}
+				formData.append("factoryId", this.chocolate.factoryId); // Add factoryId
+
 				await axios.put(
 					`http://localhost:3000/rest/chocolates/${this.$route.params.id}`,
-					this.chocolate,
+					formData,
 					{
 						withCredentials: true,
+						headers: { "Content-Type": "multipart/form-data" },
 					}
 				);
 				this.$router.push(`/factories/${this.chocolate.factoryId}`);
@@ -132,6 +174,7 @@ label {
 }
 
 input,
+select,
 textarea {
 	flex: 1;
 	padding: 8px;

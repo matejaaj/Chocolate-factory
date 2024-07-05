@@ -41,6 +41,7 @@ class ChocolateService {
 			existingChocolate.expiryDate =
 				data.expiryDate || existingChocolate.expiryDate;
 			existingChocolate.quantity = data.quantity || existingChocolate.quantity;
+			existingChocolate.image = data.image || existingChocolate.image; // Ažuriranje slike
 			return this.chocolateDAO.update(existingChocolate);
 		}
 		return null;
