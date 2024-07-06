@@ -16,6 +16,7 @@ class FactoryService {
 			this.addAverageRating(factory);
 			const location = this.locationService.getLocationById(factory.locationId);
 			factory.location = location;
+			this.updateFactoryStatus(factory);
 		}
 
 		console.log("Initial factories count:", factories.length);
@@ -90,6 +91,7 @@ class FactoryService {
 		const location = this.locationService.getLocationById(factory.locationId);
 		const enrichedFactory = this.addAverageRating(factory, reviews);
 		enrichedFactory.location = location;
+		this.updateFactoryStatus(enrichedFactory);
 		return enrichedFactory;
 	}
 
@@ -112,6 +114,8 @@ class FactoryService {
 			existingFactory.location = data.location || existingFactory.location;
 			existingFactory.productionCapacity =
 				data.productionCapacity || existingFactory.productionCapacity;
+			existingFactory.workingHours = data.workingHours || existingFactory.workingHours;
+			this.updateFactoryStatus(existingFactory);
 			return this.factoryDAO.update(existingFactory);
 		}
 		return null;
@@ -134,6 +138,22 @@ class FactoryService {
 		const averageRating = reviews.length > 0 ? totalGrades / reviews.length : 0;
 		factory.rating = averageRating;
 		return factory;
+	}
+
+	updateFactoryStatus(factory) {
+		const currentTime = new Date();
+		const [openHour, openMinute] = factory.workingHours.open.split(":").map(Number);
+		const [closeHour, closeMinute] = factory.workingHours.close.split(":").map(Number);
+		const openTime = new Date(currentTime);
+		openTime.setHours(openHour, openMinute, 0, 0);
+		const closeTime = new Date(currentTime);
+		closeTime.setHours(closeHour, closeMinute, 0, 0);
+
+		if (currentTime >= openTime && currentTime <= closeTime) {
+			factory.status = "open";
+		} else {
+			factory.status = "closed";
+		}
 	}
 }
 

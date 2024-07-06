@@ -88,12 +88,20 @@ class FactoryController {
 			if (!req.userId || req.role !== "ADMINISTRATOR") {
 				return res.status(403).json({ message: "Forbidden: Admins only" });
 			}
-
-			console.log("USERNAME" + req.body.username);
-
+	
+			console.log("USERNAME: " + req.body.username);
+	
+			// Parsiranje radnih sati
+			let workingHours;
+			try {
+				workingHours = JSON.parse(req.body.workingHours);
+			} catch (error) {
+				return res.status(400).json({ message: "Invalid working hours format" });
+			}
+	
 			const factory = {
 				name: req.body.name,
-				workingHours: req.body.workingHours,
+				workingHours: workingHours,
 				status: req.body.status,
 				location: {
 					latitude: req.body.latitude,
@@ -105,7 +113,7 @@ class FactoryController {
 				logo: req.file ? req.file.path : null,
 				rating: req.body.rating,
 			};
-
+	
 			const selectedManagerId =
 				req.body.selectedManagerId === "null"
 					? null
@@ -119,7 +127,7 @@ class FactoryController {
 				gender: req.body.gender,
 				birthDate: req.body.birthDate,
 			};
-
+	
 			const dto = new CreateFactoryDTO(
 				factory,
 				selectedManagerId,
@@ -131,7 +139,6 @@ class FactoryController {
 			res.status(500).json({ message: error.message });
 		}
 	}
-
 	updateFactory(req, res) {
 		const updatedFactory = this.factoryService.updateFactory(
 			req.params.id,

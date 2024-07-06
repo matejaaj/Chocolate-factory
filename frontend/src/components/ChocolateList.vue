@@ -4,6 +4,23 @@
 		<div v-if="isManager">
 			<button @click="addChocolate">Add New Chocolate</button>
 		</div>
+		<div>
+			<label for="typeFilter">Type:</label>
+			<select v-model="typeFilter" @change="applyFilters">
+				<option value="">All</option>
+				<option v-for="type in uniqueTypes" :key="type" :value="type">
+					{{ type }}
+				</option>
+			</select>
+
+			<label for="categoryFilter">Category:</label>
+			<select v-model="categoryFilter" @change="applyFilters">
+				<option value="">All</option>
+				<option v-for="category in uniqueCategories" :key="category" :value="category">
+					{{ category }}
+				</option>
+			</select>
+		</div>
 		<table v-if="filteredChocolates.length">
 			<thead>
 				<tr>
@@ -86,14 +103,26 @@ export default {
 			isCustomer: false,
 			isEmployee: false,
 			quantities: {},
+			typeFilter: "",
+			categoryFilter: "",
 		};
 	},
 	computed: {
+		uniqueTypes() {
+			const types = this.chocolates.map(chocolate => chocolate.type);
+			return [...new Set(types)];
+		},
+		uniqueCategories() {
+			const categories = this.chocolates.map(chocolate => chocolate.category);
+			return [...new Set(categories)];
+		},
 		filteredChocolates() {
-			if (this.isCustomer) {
-				return this.chocolates.filter((chocolate) => chocolate.quantity > 0);
-			}
-			return this.chocolates;
+			return this.chocolates.filter((chocolate) => {
+				const matchesType = this.typeFilter ? chocolate.type === this.typeFilter : true;
+				const matchesCategory = this.categoryFilter ? chocolate.category === this.categoryFilter : true;
+				const matchesQuantity = this.isCustomer ? chocolate.quantity > 0 : true;
+				return matchesType && matchesCategory && matchesQuantity;
+			});
 		},
 	},
 	created() {
@@ -201,6 +230,9 @@ export default {
 				console.error("Error adding to cart:", error);
 			}
 		},
+		applyFilters() {
+			// Trigger computed property to re-evaluate
+		}
 	},
 };
 </script>

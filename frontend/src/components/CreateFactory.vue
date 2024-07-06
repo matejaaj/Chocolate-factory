@@ -7,8 +7,12 @@
 				<input type="text" v-model="factory.name" required />
 			</div>
 			<div>
-				<label for="workingHours">Working Hours:</label>
-				<input type="text" v-model="factory.workingHours" required />
+				<label for="workingHoursOpen">Working Hours Open:</label>
+				<input type="time" v-model="factory.workingHours.open" required />
+			</div>
+			<div>
+				<label for="workingHoursClose">Working Hours Close:</label>
+				<input type="time" v-model="factory.workingHours.close" required />
 			</div>
 			<div>
 				<label for="logo">Logo:</label>
@@ -99,7 +103,10 @@ export default {
 	setup() {
 		const factory = ref({
 			name: "",
-			workingHours: "",
+			workingHours: {
+				open: "",
+				close: ""
+			},
 			logo: null,
 			location: {
 				latitude: 0,
@@ -249,7 +256,7 @@ export default {
 				const formData = new FormData();
 				const factoryData = {
 					name: factory.value.name,
-					workingHours: factory.value.workingHours,
+					workingHours: JSON.stringify(factory.value.workingHours),
 					status: "open",
 					latitude: factory.value.location.latitude,
 					longitude: factory.value.location.longitude,
@@ -376,6 +383,7 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="date"],
+input[type="time"],
 select {
 	padding: 10px;
 	border: 1px solid #ddd;

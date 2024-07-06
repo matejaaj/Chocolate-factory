@@ -2,7 +2,7 @@ class Factory {
 	constructor(name, workingHours, status, locationId, logo, rating) {
 		this.id = null;
 		this.name = name;
-		this.workingHours = workingHours;
+		this.workingHours = workingHours; // { open: "08:00", close: "17:00" }
 		this.status = status;
 		this.locationId = locationId;
 		this.logo = logo;
@@ -14,7 +14,7 @@ class Factory {
 		return [
 			this.id,
 			this.name,
-			this.workingHours,
+			JSON.stringify(this.workingHours),
 			this.status,
 			this.locationId,
 			this.logo,
@@ -35,6 +35,7 @@ class Factory {
 			this.isDeleted,
 		] = values;
 		this.id = parseInt(this.id);
+		this.workingHours = JSON.parse(this.workingHours);
 		this.isDeleted = this.isDeleted
 			? this.isDeleted.toLowerCase() === "true"
 			: false;
